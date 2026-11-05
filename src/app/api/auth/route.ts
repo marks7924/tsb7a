@@ -86,10 +86,14 @@ export async function DELETE() {
 }
 
 export async function GET() {
-  const session = await getCurrentSession();
-  if (!session) {
+  try {
+    const session = await getCurrentSession();
+    if (!session) {
+      return NextResponse.json({ user: null });
+    }
+    return NextResponse.json({ user: session });
+  } catch {
     return NextResponse.json({ user: null });
   }
-  return NextResponse.json({ user: session });
 }
 

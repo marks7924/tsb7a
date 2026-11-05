@@ -428,8 +428,8 @@ export default function RegisterPage() {
                     type="button"
                     onClick={() => setGender("MALE")}
                     className={`p-3 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs transition-all cursor-pointer ${gender === "MALE"
-                        ? "bg-[#233D30] text-white border-[#233D30] shadow-xs"
-                        : "bg-white text-[#252922] border-[#E4E0D5] hover:bg-[#FAF5EA]"
+                      ? "bg-[#233D30] text-white border-[#233D30] shadow-xs"
+                      : "bg-white text-[#252922] border-[#E4E0D5] hover:bg-[#FAF5EA]"
                       }`}
                   >
                     <span>👦</span>
@@ -439,8 +439,8 @@ export default function RegisterPage() {
                     type="button"
                     onClick={() => setGender("FEMALE")}
                     className={`p-3 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs transition-all cursor-pointer ${gender === "FEMALE"
-                        ? "bg-[#233D30] text-white border-[#233D30] shadow-xs"
-                        : "bg-white text-[#252922] border-[#E4E0D5] hover:bg-[#FAF5EA]"
+                      ? "bg-[#233D30] text-white border-[#233D30] shadow-xs"
+                      : "bg-white text-[#252922] border-[#E4E0D5] hover:bg-[#FAF5EA]"
                       }`}
                   >
                     <span>👧</span>
