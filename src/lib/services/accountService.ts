@@ -91,7 +91,7 @@ export async function registerNewMember(params: {
     : getRandomAvatarForGender(assignedGender).url;
 
   // Execute in transaction
-  return await prisma.$transaction(async (tx) => {
+  return await (prisma as any).$transaction(async (tx: any) => {
     // Check if phone or email exists
     const existingMember = await tx.member.findFirst({
       where: {
@@ -150,7 +150,7 @@ export async function registerNewMember(params: {
     });
 
     return { member, account };
-  });
+  }, { timeout: 30000, maxWait: 15000 });
 }
 
 export async function linkExistingMember(params: {
@@ -237,7 +237,7 @@ export async function linkExistingMember(params: {
     });
 
     return { member, account };
-  });
+  }, { timeout: 30000, maxWait: 15000 });
 }
 
 export async function adminGenerateNewPassword(

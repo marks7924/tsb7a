@@ -111,7 +111,7 @@ export async function executeMemberMerge(params: {
     throw new Error("CANNOT_MERGE_SAME_MEMBER");
   }
 
-  return await prisma.$transaction(async (tx) => {
+  return await (prisma as any).$transaction(async (tx: any) => {
     const surviving = await tx.member.findUnique({
       where: { id: survivingMemberId },
       include: {
@@ -143,10 +143,10 @@ export async function executeMemberMerge(params: {
     }
 
     // 1. Process Attendance Union and Conflict Resolution
-    const survivingAttMap = new Map(surviving.attendances.map((a) => [a.sessionId, a]));
+    const survivingAttMap = new Map<string, any>(surviving.attendances.map((a: any) => [a.sessionId, a]));
 
     for (const dupAtt of duplicate.attendances) {
-      const survAtt = survivingAttMap.get(dupAtt.sessionId);
+      const survAtt: any = survivingAttMap.get(dupAtt.sessionId);
 
       if (!survAtt) {
         // Attendance exists only in duplicate record -> Move to surviving member
@@ -174,7 +174,7 @@ export async function executeMemberMerge(params: {
     }
 
     // 2. Merge Rewards (Milestone union: ensure no duplicates for same milestone)
-    const survivingMilestones = new Set(surviving.rewards.map((r) => r.milestone));
+    const survivingMilestones = new Set(surviving.rewards.map((r: any) => r.milestone));
     for (const dupReward of duplicate.rewards) {
       if (!survivingMilestones.has(dupReward.milestone)) {
         // Re-assign reward to surviving member
@@ -185,7 +185,7 @@ export async function executeMemberMerge(params: {
       } else {
         // If surviving has EARNED but duplicate has DELIVERED, upgrade surviving to DELIVERED
         if (dupReward.status === "DELIVERED") {
-          const survReward = surviving.rewards.find((r) => r.milestone === dupReward.milestone);
+          const survReward = surviving.rewards.find((r: any) => r.milestone === dupReward.milestone);
           if (survReward && survReward.status !== "DELIVERED") {
             await tx.memberReward.update({
               where: { id: survReward.id },
@@ -205,7 +205,7 @@ export async function executeMemberMerge(params: {
     }
 
     // 3. Merge Achievements (Union of keys)
-    const survivingAchievementKeys = new Set(surviving.achievements.map((a) => a.achievementKey));
+    const survivingAchievementKeys = new Set(surviving.achievements.map((a: any) => a.achievementKey));
     for (const dupAch of duplicate.achievements) {
       if (!survivingAchievementKeys.has(dupAch.achievementKey)) {
         await tx.memberAchievement.update({
@@ -312,7 +312,7 @@ export async function executeMemberMerge(params: {
     });
 
     return mergeHistory;
-  }).then(async (result) => {
+  }).then(async (result: any) => {
     // 10. Recalculate statistics deterministically after transaction commits
     await recalculateMemberStats(survivingMemberId);
 
@@ -336,6 +336,6 @@ export async function executeMemberMerge(params: {
       }
     }
     return result;
-  });
+  }, { timeout: 30000, maxWait: 15000 });
 }
 
