@@ -1,0 +1,226 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Member {
+  id                  String               @id @default(cuid())
+  fullName            String
+  phone               String               @unique
+  email               String?              @unique
+  avatarUrl           String?
+  gender              String?              @default("MALE") // MALE, FEMALE
+  role                String               @default("MEMBER") // MEMBER, MODERATOR, ADMIN, DEVELOPER
+  status              String               @default("ACTIVE") // ACTIVE, INACTIVE, ARCHIVED, MERGED
+  joinedDate          DateTime             @default(now())
+  createdById         String?
+  updatedById         String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  loginAccount        Account?
+  attendances         Attendance[]
+  streakResetRequests StreakResetRequest[]
+  rewards             MemberReward[]
+  achievements        MemberAchievement[]
+  notifications       Notification[]
+  stats               MemberStats?
+
+  @@index([role])
+  @@index([status])
+}
+
+model Account {
+  id           String    @id @default(cuid())
+  memberId     String    @unique
+  member       Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  email        String    @unique
+  passwordHash String
+  status       String    @default("ACTIVE") // ACTIVE, DISABLED, UNLINKED
+  lastLogin    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model SaturdaySession {
+  id                  String               @id @default(cuid())
+  date                DateTime             @unique // Stored as normalized Saturday midnight UTC
+  status              String               @default("SCHEDULED") // SCHEDULED, ACTIVE, COMPLETED, OFF, CANCELLED
+  title               String?
+  offReason           String?
+  qrActive            Boolean              @default(false)
+  qrToken             String?
+  qrExpiresAt         DateTime?
+  createdById         String?
+  updatedById         String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  attendances         Attendance[]
+  streakResetRequests StreakResetRequest[]
+
+  @@index([status])
+  @@index([date])
+}
+
+model Attendance {
+  id          String          @id @default(cuid())
+  memberId    String
+  sessionId   String
+  status      String          // PRESENT, ABSENT
+  method      String          @default("MANUAL") // MANUAL, QR
+  markedById  String?
+  markedAt    DateTime        @default(now())
+  updatedById String?
+  updatedAt   DateTime        @updatedAt
+
+  member      Member          @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  session     SaturdaySession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, sessionId])
+  @@index([sessionId, status])
+  @@index([memberId])
+}
+
+model StreakResetRequest {
+  id            String          @id @default(cuid())
+  memberId      String
+  sessionId     String
+  previousStreak Int
+  status        String          @default("PENDING") // PENDING, APPROVED, REJECTED
+  requestedById String?
+  requestedAt   DateTime        @default(now())
+  reviewedById  String?
+  reviewedAt    DateTime?
+  decisionNotes String?
+
+  member        Member          @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  session       SaturdaySession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([memberId, status])
+  @@index([sessionId])
+}
+
+model MemberStats {
+  id                 String   @id @default(cuid())
+  memberId           String   @unique
+  member             Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  currentStreak      Int      @default(0)
+  longestStreak      Int      @default(0)
+  provisionalStreak  Int      @default(0)
+  hasPendingReset    Boolean  @default(false)
+  totalAttendance    Int      @default(0)
+  annualAttendance   Int      @default(0)
+  rewardsEarned      Int      @default(0)
+  rewardsDelivered   Int      @default(0)
+  nextRewardProgress Int      @default(0)
+  updatedAt          DateTime @updatedAt
+}
+
+model RewardType {
+  id          String   @id @default(cuid())
+  name        String
+  nameAr      String
+  description String?
+  threshold   Int      @default(4)
+  icon        String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model MemberReward {
+  id            String    @id @default(cuid())
+  memberId      String
+  rewardTypeId  String?
+  milestone     Int       // e.g. 4, 8, 12, 16...
+  earnedDate    DateTime  @default(now())
+  status        String    @default("EARNED") // PENDING_CONFIRMATION, EARNED, DELIVERED, CANCELLED
+  deliveredById String?
+  deliveredAt   DateTime?
+  member        Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, milestone])
+  @@index([memberId, status])
+}
+
+model AchievementType {
+  id            String   @id @default(cuid())
+  key           String   @unique
+  titleEn       String
+  titleAr       String
+  descriptionEn String
+  descriptionAr String
+  icon          String?
+  badgeColor    String?
+  criteriaType  String   // TOTAL_ATTENDANCE, STREAK, REWARD
+  criteriaValue Int
+}
+
+model MemberAchievement {
+  id             String   @id @default(cuid())
+  memberId       String
+  achievementKey String
+  earnedAt       DateTime @default(now())
+  member         Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, achievementKey])
+  @@index([memberId])
+}
+
+model MemberMergeHistory {
+  id                    String   @id @default(cuid())
+  survivingMemberId     String
+  mergedMemberId        String
+  mergedMemberName      String
+  mergedMemberPhone     String
+  adminId               String
+  adminName             String
+  beforeStatsJson       String
+  afterStatsJson        String
+  conflictDecisionsJson String?
+  createdAt             DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  memberId  String
+  titleEn   String
+  titleAr   String
+  messageEn String
+  messageAr String
+  type      String   // ATTENDANCE, REWARD, STREAK, ACHIEVEMENT, SESSION, SECURITY
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([memberId, isRead])
+}
+
+model ActivityLog {
+  id           String   @id @default(cuid())
+  actorId      String?
+  actorName    String?
+  actorRole    String?
+  action       String
+  targetEntity String
+  targetId     String?
+  oldValueJson String?
+  newValueJson String?
+  reason       String?
+  createdAt    DateTime @default(now())
+
+  @@index([targetEntity, targetId])
+  @@index([createdAt])
+}
+
+model SystemSetting {
+  key         String   @id
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+

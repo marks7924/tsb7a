@@ -1,26 +1,101 @@
 @import "tailwindcss";
 
+@theme {
+  --color-ivory: #F7F6F1;
+  --color-ivory-subtle: #EFEDE5;
+  --color-forest: #233D30;
+  --color-forest-deep: #192D24;
+  --color-forest-hover: #16261f;
+  --color-gold: #F59E0B;
+  --color-gold-light: #FDE68A;
+  --color-gold-wash: #2D2412;
+  --color-charcoal: #0F1019;
+  --color-muted: #94A3B8;
+  --color-border: #24283E;
+  --color-border-dark: #1E2134;
+  --color-surface: #141724;
+  --color-crimson: #EF4444;
+  --color-emerald: #10B981;
+  --color-emerald-wash: #064E3B;
+
+  --font-arabic: var(--font-arabic), "IBM Plex Sans Arabic", "Tajawal", -apple-system, sans-serif;
+  --font-latin: var(--font-latin), "Inter", -apple-system, sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --bg-main: #0B0C14;
+  --bg-subtle: #121420;
+  --bg-surface: #161826;
+  --bg-elevated: #1F2236;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --border-line: #25283E;
+  --accent-gold: #F59E0B;
+  --accent-emerald: #10B981;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #0B0C14;
+  color: #F8FAFC;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  min-height: 100vh;
+  letter-spacing: -0.01em;
+}
+
+/* RTL Typography Adjustment */
+[dir="rtl"] {
+  font-family: var(--font-arabic), "IBM Plex Sans Arabic", sans-serif;
+}
+
+[dir="ltr"] {
+  font-family: var(--font-latin), "Inter", sans-serif;
+}
+
+/* Dark Mode Sleek Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0C14;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #25283E;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #F59E0B;
+}
+
+/* Subtle focus ring */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus-visible {
+  outline: none;
+  border-color: #F59E0B;
+  box-shadow: 0 0 0 1px #F59E0B;
+}
+
+/* Glowing Neon Accents */
+.glow-gold {
+  box-shadow: 0 0 25px -4px rgba(245, 158, 11, 0.35);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 25px -4px rgba(16, 185, 129, 0.35);
+}
+
+.glow-purple {
+  box-shadow: 0 0 25px -4px rgba(139, 92, 246, 0.3);
+}
+
+/* Print optimizations for PDF/export */
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }
