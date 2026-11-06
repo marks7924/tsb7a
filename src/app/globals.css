@@ -107,6 +107,19 @@ html.dark .bg-\[\#E4E0D5\] {
   background-color: #1A1D30 !important;
 }
 
+/* Gradients in dark mode */
+html.dark .from-\[\#FAF5EA\],
+html.dark .from-white {
+  --tw-gradient-from: #161828 var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: #121422 var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+
+html.dark .to-white,
+html.dark .to-\[\#FAF5EA\] {
+  --tw-gradient-to: #121422 var(--tw-gradient-to-position) !important;
+}
+
 /* Borders in dark mode */
 html.dark .border-\[\#E4E0D5\],
 html.dark .border-\[\#EFEDE5\],

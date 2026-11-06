@@ -24,6 +24,7 @@ import {
   RefreshCw,
   Camera,
   Keyboard,
+  ChevronDown,
 } from "lucide-react";
 import QRCode from "qrcode";
 import { CameraQRScanner } from "@/components/CameraQRScanner";
@@ -346,20 +347,23 @@ export default function AttendancePage() {
               <CopticCross className="w-5 h-5" color="#B58A3A" />
             </div>
             <div>
-              <span className="text-[10px] font-bold text-[#77786F] uppercase tracking-wider block">
+              <span className="text-[10px] font-bold text-[#77786F] dark:text-[#94A3B8] uppercase tracking-wider block mb-1">
                 {t("attendance.saturdaySession")}
               </span>
-              <select
-                value={selectedSessionId}
-                onChange={(e) => setSelectedSessionId(e.target.value)}
-                className="font-bold text-sm sm:text-base text-[#233D30] bg-transparent border-none p-0 focus:ring-0 cursor-pointer"
-              >
-                {sessions.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.title || new Date(s.date).toISOString().split("T")[0]} ({t(`statuses.${s.status}`)})
-                  </option>
-                ))}
-              </select>
+              <div className="relative inline-block w-full sm:w-auto">
+                <select
+                  value={selectedSessionId}
+                  onChange={(e) => setSelectedSessionId(e.target.value)}
+                  className="appearance-none font-bold text-xs sm:text-sm text-[#233D30] dark:text-white bg-[#F7F6F1] dark:bg-[#161828] border border-[#E4E0D5] dark:border-[#2B304C] rounded-xl py-2 px-3 rtl:pl-9 ltr:pr-9 hover:border-[#B58A3A] dark:hover:border-[#F59E0B] focus:outline-none focus:ring-2 focus:ring-[#F59E0B]/30 cursor-pointer transition-all shadow-xs w-full sm:w-auto"
+                >
+                  {sessions.map((s) => (
+                    <option key={s.id} value={s.id} className="bg-white dark:bg-[#161828] text-[#252922] dark:text-white py-1">
+                      {s.title || new Date(s.date).toISOString().split("T")[0]} ({t(`statuses.${s.status}`)})
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="w-4 h-4 text-[#77786F] dark:text-[#94A3B8] absolute top-1/2 -translate-y-1/2 rtl:left-2.5 ltr:right-2.5 pointer-events-none" />
+              </div>
             </div>
           </div>
 
@@ -526,7 +530,7 @@ export default function AttendancePage() {
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-right ltr:text-left text-xs">
                   <thead>
-                    <tr className="border-b border-[#E4E0D5] bg-[#EFEDE5]/60 text-[11px] font-bold text-[#77786F] uppercase tracking-wider">
+                    <tr className="border-b border-[#E4E0D5] dark:border-[#232740] bg-[#EFEDE5]/60 dark:bg-[#161828] text-[11px] font-bold text-[#77786F] dark:text-[#94A3B8] uppercase tracking-wider">
                       <th className="py-3 px-4">{t("common.name")}</th>
                       <th className="py-3 px-4">{t("common.phone")}</th>
                       <th className="py-3 px-4 text-center">{t("streaks.currentStreak")}</th>
@@ -535,7 +539,7 @@ export default function AttendancePage() {
                       <th className="py-3 px-4 text-center">{t("common.actions")}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#E4E0D5]/70">
+                  <tbody className="divide-y divide-[#E4E0D5]/70 dark:divide-[#232740]">
                     {filteredMembers.map((m) => {
                       const isPresent = m.attendanceStatus === "PRESENT";
                       const isAbsent = m.attendanceStatus === "ABSENT";
@@ -547,14 +551,14 @@ export default function AttendancePage() {
                       return (
                         <tr
                           key={m.memberId}
-                          className={`hover:bg-[#FAF5EA]/40 transition-colors ${isPresent
-                            ? "bg-[#EEF5F1]/30"
+                          className={`hover:bg-[#FAF5EA]/40 dark:hover:bg-[#1A1D30] transition-colors ${isPresent
+                            ? "bg-[#EEF5F1]/30 dark:bg-[#10B981]/10"
                             : isAbsent
-                              ? "bg-[#FAF0F0]/30"
+                              ? "bg-[#FAF0F0]/30 dark:bg-[#EF4444]/10"
                               : ""
                             }`}
                         >
-                          <td className="py-3 px-4 font-bold text-xs text-[#252922]">
+                          <td className="py-3 px-4 font-bold text-xs text-[#252922] dark:text-white">
                             <div className="flex items-center gap-2">
                               <MemberAvatar
                                 memberId={m.memberId}
@@ -565,17 +569,17 @@ export default function AttendancePage() {
                               <span>{cleanName}</span>
                             </div>
                           </td>
-                          <td className="py-3 px-4 font-mono text-xs text-[#77786F]">
+                          <td className="py-3 px-4 font-mono text-xs text-[#77786F] dark:text-[#94A3B8]">
                             {m.phone}
                           </td>
                           <td className="py-3 px-4 text-center font-mono">
-                            <span className="font-bold text-[#B58A3A]">
+                            <span className="font-bold text-[#B58A3A] dark:text-[#F59E0B]">
                               {m.currentStreak}
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-center text-xs font-mono text-[#77786F]">
+                          <td className="py-3 px-4 text-center text-xs font-mono text-[#77786F] dark:text-[#94A3B8]">
                             {m.rewardsEarned > 0 ? (
-                              <span className="font-bold text-[#233D30]">
+                              <span className="font-bold text-[#233D30] dark:text-[#10B981]">
                                 🎁 {m.rewardsEarned}
                               </span>
                             ) : (
@@ -584,17 +588,17 @@ export default function AttendancePage() {
                           </td>
                           <td className="py-3 px-4 text-center">
                             {isPresent ? (
-                              <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#EEF5F1] text-[#233D30] border border-[#233D30]/20 font-mono">
+                              <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#EEF5F1] dark:bg-[#10B981]/20 text-[#233D30] dark:text-[#10B981] border border-[#233D30]/20 dark:border-[#10B981]/30 font-mono">
                                 <Check className="w-3 h-3 stroke-[2.5]" />
                                 {t("statuses.PRESENT")} {m.method === "QR" ? "(QR)" : ""}
                               </span>
                             ) : isAbsent ? (
-                              <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#FAF0F0] text-[#8C2929] border border-[#8C2929]/20 font-mono">
+                              <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#FAF0F0] dark:bg-[#EF4444]/20 text-[#8C2929] dark:text-[#EF4444] border border-[#8C2929]/20 dark:border-[#EF4444]/30 font-mono">
                                 <X className="w-3 h-3 stroke-[2.5]" />
                                 {t("statuses.ABSENT")}
                               </span>
                             ) : (
-                              <span className="text-[11px] text-[#77786F]">
+                              <span className="text-[11px] text-[#77786F] dark:text-[#64748B]">
                                 {language === "ar" ? "غير مسجل" : "Unmarked"}
                               </span>
                             )}
@@ -605,8 +609,8 @@ export default function AttendancePage() {
                                 disabled={isOffSession}
                                 onClick={() => handleMarkAttendance(m.memberId, "PRESENT")}
                                 className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${isPresent
-                                  ? "bg-[#233D30] text-white shadow-xs"
-                                  : "border border-[#233D30] text-[#233D30] hover:bg-[#233D30]/10"
+                                  ? "bg-[#233D30] dark:bg-[#10B981] text-white shadow-xs"
+                                  : "border border-[#233D30] dark:border-[#10B981]/40 text-[#233D30] dark:text-[#10B981] hover:bg-[#233D30]/10 dark:hover:bg-[#10B981]/15"
                                   }`}
                               >
                                 {t("attendance.markPresent")}
@@ -615,8 +619,8 @@ export default function AttendancePage() {
                                 disabled={isOffSession}
                                 onClick={() => handleMarkAttendance(m.memberId, "ABSENT")}
                                 className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${isAbsent
-                                  ? "bg-[#8C2929] text-white shadow-xs"
-                                  : "border border-[#8C2929] text-[#8C2929] hover:bg-[#8C2929]/10"
+                                  ? "bg-[#8C2929] dark:bg-[#EF4444] text-white shadow-xs"
+                                  : "border border-[#8C2929] dark:border-[#EF4444]/40 text-[#8C2929] dark:text-[#EF4444] hover:bg-[#8C2929]/10 dark:hover:bg-[#EF4444]/15"
                                   }`}
                               >
                                 {t("attendance.markAbsent")}
@@ -631,7 +635,7 @@ export default function AttendancePage() {
               </div>
 
               {/* Mobile Card Roster (Touch Friendly) */}
-              <div className="md:hidden divide-y divide-[#E4E0D5]/70">
+              <div className="md:hidden divide-y divide-[#E4E0D5]/70 dark:divide-[#232740]">
                 {filteredMembers.map((m) => {
                   const isPresent = m.attendanceStatus === "PRESENT";
                   const isAbsent = m.attendanceStatus === "ABSENT";
@@ -643,7 +647,7 @@ export default function AttendancePage() {
                   return (
                     <div
                       key={m.memberId}
-                      className={`p-3.5 space-y-2.5 ${isPresent ? "bg-[#EEF5F1]/30" : isAbsent ? "bg-[#FAF0F0]/30" : ""
+                      className={`p-3.5 space-y-2.5 ${isPresent ? "bg-[#EEF5F1]/30 dark:bg-[#10B981]/10" : isAbsent ? "bg-[#FAF0F0]/30 dark:bg-[#EF4444]/10" : ""
                         }`}
                     >
                       <div className="flex items-start justify-between">
@@ -655,11 +659,11 @@ export default function AttendancePage() {
                             size="sm"
                           />
                           <div>
-                            <h4 className="font-bold text-xs text-[#252922]">{cleanName}</h4>
-                            <span className="text-[11px] text-[#77786F] font-mono">{m.phone}</span>
+                            <h4 className="font-bold text-xs text-[#252922] dark:text-white">{cleanName}</h4>
+                            <span className="text-[11px] text-[#77786F] dark:text-[#94A3B8] font-mono">{m.phone}</span>
                           </div>
                         </div>
-                        <span className="text-xs font-mono font-bold text-[#B58A3A]">
+                        <span className="text-xs font-mono font-bold text-[#B58A3A] dark:text-[#F59E0B]">
                           {m.currentStreak} {language === "ar" ? "سبت" : "wks"}
                         </span>
                       </div>
@@ -669,8 +673,8 @@ export default function AttendancePage() {
                           disabled={isOffSession}
                           onClick={() => handleMarkAttendance(m.memberId, "PRESENT")}
                           className={`py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${isPresent
-                            ? "bg-[#233D30] text-white shadow-xs"
-                            : "border border-[#233D30] text-[#233D30] hover:bg-[#233D30]/10"
+                            ? "bg-[#233D30] dark:bg-[#10B981] text-white shadow-xs"
+                            : "border border-[#233D30] dark:border-[#10B981]/40 text-[#233D30] dark:text-[#10B981] hover:bg-[#233D30]/10 dark:hover:bg-[#10B981]/15"
                             }`}
                         >
                           <Check className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -681,8 +685,8 @@ export default function AttendancePage() {
                           disabled={isOffSession}
                           onClick={() => handleMarkAttendance(m.memberId, "ABSENT")}
                           className={`py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${isAbsent
-                            ? "bg-[#8C2929] text-white shadow-xs"
-                            : "border border-[#8C2929] text-[#8C2929] hover:bg-[#8C2929]/10"
+                            ? "bg-[#8C2929] dark:bg-[#EF4444] text-white shadow-xs"
+                            : "border border-[#8C2929] dark:border-[#EF4444]/40 text-[#8C2929] dark:text-[#EF4444] hover:bg-[#8C2929]/10 dark:hover:bg-[#EF4444]/15"
                             }`}
                         >
                           <X className="w-3.5 h-3.5 stroke-[2.5]" />

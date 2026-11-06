@@ -478,67 +478,69 @@ export default function MemberDashboardPage() {
         {/* Top Feature: Personal Attendance QR Pass & Streaks Overview */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
           {/* Dedicated Personal QR Pass Card (5 cols) */}
-          <div className="lg:col-span-5 bg-gradient-to-b from-[#FAF5EA] to-white rounded-2xl border-2 border-[#B58A3A]/40 p-5 sm:p-6 shadow-sm flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-[#B58A3A]/5 rounded-bl-full pointer-events-none" />
+          <div className="lg:col-span-5 bg-gradient-to-b from-[#FAF5EA] to-white dark:from-[#161828] dark:to-[#121422] rounded-2xl border-2 border-[#B58A3A]/40 dark:border-[#B58A3A]/30 p-5 sm:p-6 shadow-sm flex flex-col justify-between relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-[#B58A3A]/5 dark:bg-[#B58A3A]/10 rounded-bl-full pointer-events-none" />
 
             <div className="space-y-3">
-              <div className="flex items-center justify-between pb-3 border-b border-[#B58A3A]/20">
+              <div className="flex items-center justify-between pb-3 border-b border-[#B58A3A]/20 dark:border-[#B58A3A]/30">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-[#233D30] text-[#B58A3A] flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-[#233D30] dark:bg-[#1E2438] text-[#B58A3A] dark:text-[#F59E0B] flex items-center justify-center border border-[#B58A3A]/30">
                     <CopticCross className="w-4 h-4" color="#B58A3A" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-xs sm:text-sm text-[#233D30]">
+                    <h3 className="font-bold text-xs sm:text-sm text-[#233D30] dark:text-white">
                       {language === "ar" ? "بطاقة حضور التسبحة الشخصية" : "Personal Attendance Pass"}
                     </h3>
-                    <p className="text-[10px] text-[#77786F]">
+                    <p className="text-[10px] text-[#77786F] dark:text-[#94A3B8]">
                       {t("app.churchName")}
                     </p>
                   </div>
                 </div>
-                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#233D30] text-white">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#233D30] dark:bg-[#1E2438] text-white dark:text-[#F59E0B] border border-[#B58A3A]/30">
                   QR PASS
                 </span>
               </div>
 
               {/* QR Code Container */}
-              <div className="bg-white p-3 rounded-xl border border-[#E4E0D5] flex flex-col items-center justify-center shadow-xs">
+              <div className="bg-white dark:bg-[#1A1D30] p-3 rounded-xl border border-[#E4E0D5] dark:border-[#2B304C] flex flex-col items-center justify-center shadow-xs">
                 {qrDataUrl ? (
-                  <img
-                    src={qrDataUrl}
-                    alt="Personal Attendance QR Code"
-                    className="w-48 h-48 sm:w-52 sm:h-52 object-contain"
-                  />
+                  <div className="p-2 bg-white rounded-lg shadow-inner">
+                    <img
+                      src={qrDataUrl}
+                      alt="Personal Attendance QR Code"
+                      className="w-44 h-44 sm:w-48 sm:h-48 object-contain"
+                    />
+                  </div>
                 ) : (
-                  <div className="w-48 h-48 flex items-center justify-center text-xs text-[#77786F]">
+                  <div className="w-48 h-48 flex items-center justify-center text-xs text-[#77786F] dark:text-[#94A3B8]">
                     {t("common.loading")}
                   </div>
                 )}
-                <div className="text-center mt-2">
-                  <span className="font-bold text-xs text-[#252922] block">
+                <div className="text-center mt-2.5">
+                  <span className="font-bold text-xs text-[#252922] dark:text-white block">
                     {cleanMemberName}
                   </span>
-                  <span className="text-[11px] font-mono text-[#77786F]">
+                  <span className="text-[11px] font-mono text-[#77786F] dark:text-[#94A3B8]">
                     {member.phone}
                   </span>
                 </div>
               </div>
 
-              <p className="text-[11px] text-center text-[#77786F] leading-tight px-2">
+              <p className="text-[11px] text-center text-[#77786F] dark:text-[#94A3B8] leading-tight px-2">
                 {language === "ar"
                   ? "أبرز هذا الرمز لخادم التسبحة عند الباب ليقوم بمسحه وتسجيل حضورك فوراً."
                   : "Show this QR code to the church servant at the door to record your attendance instantly."}
               </p>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-[#E4E0D5] flex flex-col gap-2.5">
+            <div className="mt-4 pt-3 border-t border-[#E4E0D5] dark:border-[#232740] flex flex-col gap-2.5">
               <div className="flex items-center justify-between">
                 <button
                   type="button"
                   onClick={handleCopyPassCode}
-                  className="px-3 py-1.5 rounded-lg border border-[#E4E0D5] bg-white hover:bg-[#EFEDE5] text-xs font-semibold text-[#252922] flex items-center gap-1.5 transition-colors cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg border border-[#E4E0D5] dark:border-[#2B304C] bg-white dark:bg-[#1A1D30] hover:bg-[#EFEDE5] dark:hover:bg-[#252944] text-xs font-semibold text-[#252922] dark:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
-                  <Copy className="w-3.5 h-3.5 text-[#77786F]" />
+                  <Copy className="w-3.5 h-3.5 text-[#77786F] dark:text-[#94A3B8]" />
                   <span>{copiedToken ? (language === "ar" ? "تم النسخ!" : "Copied!") : (language === "ar" ? "نسخ الرمز" : "Copy Code")}</span>
                 </button>
 
@@ -546,7 +548,7 @@ export default function MemberDashboardPage() {
                   <a
                     href={qrDataUrl}
                     download={`tasbeha-pass-${cleanMemberName}.png`}
-                    className="px-3 py-1.5 rounded-lg bg-[#233D30] hover:bg-[#192D24] text-white text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs"
+                    className="px-3 py-1.5 rounded-lg bg-[#233D30] hover:bg-[#192D24] dark:bg-[#10B981] dark:hover:bg-[#059669] text-white text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>{language === "ar" ? "تحميل البطاقة" : "Download Pass"}</span>
@@ -562,9 +564,9 @@ export default function MemberDashboardPage() {
                   setManualSessionToken("");
                   setShowScanSessionModal(true);
                 }}
-                className="w-full py-2 px-3 rounded-lg border border-[#B58A3A] bg-[#FAF5EA] hover:bg-[#F3EAD3] text-[#233D30] text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
+                className="w-full py-2 px-3 rounded-lg border border-[#B58A3A] dark:border-[#F59E0B]/50 bg-[#FAF5EA] dark:bg-[#1A1D30] hover:bg-[#F3EAD3] dark:hover:bg-[#252944] text-[#233D30] dark:text-[#F59E0B] text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
               >
-                <Camera className="w-4 h-4 text-[#B58A3A]" />
+                <Camera className="w-4 h-4 text-[#B58A3A] dark:text-[#F59E0B]" />
                 <span>
                   {language === "ar" ? "مسح رمز تسبحة اليوم (شاشة الكنيسة)" : "Scan Today's Tasbeha Screen QR"}
                 </span>

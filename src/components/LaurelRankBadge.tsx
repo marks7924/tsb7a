@@ -72,7 +72,7 @@ export function LaurelRankBadge({ rank, size = "md", className = "", hasCrown = 
         >
           {/* Subtle Outer Glow */}
           <circle cx="32" cy="32" r="28" fill={colorScheme.badgeBg} stroke={colorScheme.border} strokeWidth="1" strokeDasharray="3 3" />
-          
+
           {/* Circular Laurel Wreath Leaves */}
           <g stroke={colorScheme.primary} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill={colorScheme.primary} fillOpacity="0.85">
             {/* Left Wreath Branch */}
@@ -94,7 +94,7 @@ export function LaurelRankBadge({ rank, size = "md", className = "", hasCrown = 
             {/* Bottom Tie Knot */}
             <path d="M 29 53 C 32 51 32 51 35 53 C 33 55 31 55 29 53 Z" fill={colorScheme.primary} />
           </g>
-          
+
           {/* Inner Number */}
           <text
             x="32"

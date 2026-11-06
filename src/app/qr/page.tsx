@@ -17,6 +17,7 @@ import {
   Award,
   Camera,
   Keyboard,
+  ChevronDown,
 } from "lucide-react";
 import QRCode from "qrcode";
 
@@ -286,21 +287,24 @@ export default function QRPage() {
 
             {/* Saturday Session Selector */}
             {sessions.length > 0 && (
-              <div className="bg-[#FAF5EA] p-3 rounded-xl border border-[#B58A3A]/30 flex items-center justify-between text-xs">
-                <span className="font-bold text-[#233D30]">
+              <div className="bg-[#FAF5EA] dark:bg-[#161828] p-3 rounded-xl border border-[#B58A3A]/30 dark:border-[#2B304C] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                <span className="font-bold text-[#233D30] dark:text-white">
                   {language === "ar" ? "جلسة السبت المحددة:" : "Target Saturday:"}
                 </span>
-                <select
-                  value={selectedSessionId}
-                  onChange={(e) => setSelectedSessionId(e.target.value)}
-                  className="font-bold text-xs text-[#252922] bg-white border border-[#E4E0D5] rounded-md px-2 py-1 cursor-pointer"
-                >
-                  {sessions.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.title || new Date(s.date).toISOString().split("T")[0]} ({t(`statuses.${s.status}`)})
-                    </option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={selectedSessionId}
+                    onChange={(e) => setSelectedSessionId(e.target.value)}
+                    className="appearance-none font-bold text-xs text-[#252922] dark:text-white bg-white dark:bg-[#1A1D30] border border-[#E4E0D5] dark:border-[#2B304C] rounded-xl py-1.5 px-3 rtl:pl-8 ltr:pr-8 hover:border-[#B58A3A] dark:hover:border-[#F59E0B] focus:outline-none focus:ring-2 focus:ring-[#F59E0B]/30 cursor-pointer transition-all shadow-xs w-full sm:w-auto"
+                  >
+                    {sessions.map((s) => (
+                      <option key={s.id} value={s.id} className="bg-white dark:bg-[#161828] text-[#252922] dark:text-white py-1">
+                        {s.title || new Date(s.date).toISOString().split("T")[0]} ({t(`statuses.${s.status}`)})
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="w-3.5 h-3.5 text-[#77786F] dark:text-[#94A3B8] absolute top-1/2 -translate-y-1/2 rtl:left-2.5 ltr:right-2.5 pointer-events-none" />
+                </div>
               </div>
             )}
 

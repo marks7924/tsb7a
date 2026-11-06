@@ -359,9 +359,6 @@ export default function HomePage() {
 
         {/* FULL LEADERBOARD HONOR ROLL TABLE (All columns shown together with LTR names) */}
         <section className="bg-[#121422] rounded-2xl sm:rounded-3xl border border-[#232742] shadow-2xl relative overflow-hidden backdrop-blur-xl">
-          {/* Glowing Green Neon Edge Line at top of container */}
-          <div className="h-1 w-full bg-gradient-to-r from-transparent via-[#10B981] to-transparent shadow-[0_0_12px_#10B981]" />
-
           {/* Section Divider Header */}
           <div className="py-2.5 px-3 sm:py-3 sm:px-6 border-b border-[#1E2238] flex items-center justify-between text-xs font-bold text-[#F59E0B]">
             <div className="flex items-center gap-1.5 sm:gap-2">
