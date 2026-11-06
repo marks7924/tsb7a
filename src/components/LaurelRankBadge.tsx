@@ -66,7 +66,7 @@ export function LaurelRankBadge({ rank, size = "md", className = "", hasCrown = 
       <div className={`relative flex items-center justify-center shrink-0 ${className}`}>
         <svg
           viewBox="0 0 64 64"
-          className="w-10 h-10 sm:w-11 sm:h-11 drop-shadow-md"
+          className="w-7 h-7 sm:w-11 sm:h-11 drop-shadow-md"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >

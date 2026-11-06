@@ -70,6 +70,157 @@ body {
   background: #F59E0B;
 }
 
+/* =========================================================================
+   UNIVERSAL DARK / LIGHT THEME RULES
+   Default theme is DARK for ALL pages.
+   When html.light is toggled, church light theme applies.
+   ========================================================================= */
+
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #0B0C14 !important;
+  color: #F8FAFC !important;
+}
+
+/* Transform light cards & containers into sleek dark panels */
+html.dark .bg-white {
+  background-color: #121422 !important;
+  color: #F8FAFC;
+}
+
+html.dark .bg-\[\#F7F6F1\],
+html.dark .bg-\[\#FDFBF7\] {
+  background-color: #0B0C14 !important;
+}
+
+html.dark .bg-\[\#FAF5EA\],
+html.dark .bg-\[\#FAF0F0\],
+html.dark .bg-\[\#EEF5F1\] {
+  background-color: #161828 !important;
+}
+
+html.dark .bg-\[\#EFEDE5\],
+html.dark .bg-\[\#E4E0D5\] {
+  background-color: #1A1D30 !important;
+}
+
+/* Borders in dark mode */
+html.dark .border-\[\#E4E0D5\],
+html.dark .border-\[\#EFEDE5\],
+html.dark .border-\[\#B58A3A\]\/60,
+html.dark .border-\[\#B58A3A\]\/40 {
+  border-color: #232740 !important;
+}
+
+html.dark .divide-\[\#EFEDE5\] > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-\[\#E4E0D5\] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #232740 !important;
+}
+
+/* Typography in dark mode */
+html.dark .text-\[\#233D30\],
+html.dark .text-\[\#252922\],
+html.dark .text-slate-800,
+html.dark .text-slate-900,
+html.dark .text-gray-900,
+html.dark .text-gray-800 {
+  color: #F8FAFC !important;
+}
+
+html.dark .text-\[\#77786F\],
+html.dark .text-slate-500,
+html.dark .text-slate-600,
+html.dark .text-gray-500,
+html.dark .text-gray-600 {
+  color: #94A3B8 !important;
+}
+
+/* Inputs, selects, and textareas */
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #121422 !important;
+  border-color: #232740 !important;
+  color: #F8FAFC !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748B !important;
+}
+
+/* Modals and dialogs */
+html.dark .shadow-2xl,
+html.dark .shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* LIGHT MODE OVERRIDES when user clicks Light Mode */
+html.light {
+  color-scheme: light;
+}
+
+html.light body {
+  background-color: #F7F6F1 !important;
+  color: #252922 !important;
+}
+
+html.light header {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: #E4E0D5 !important;
+}
+
+html.light header .text-white {
+  color: #233D30 !important;
+}
+
+html.light header .text-\[\#94A3B8\] {
+  color: #77786F !important;
+}
+
+html.light header .bg-\[\#141726\],
+html.light header .bg-\[\#161828\],
+html.light header .bg-\[\#1E2238\] {
+  background-color: #EFEDE5 !important;
+}
+
+html.light header .border-\[\#2B304A\],
+html.light header .border-\[\#1E2132\],
+html.light header .border-\[\#373A56\] {
+  border-color: #E4E0D5 !important;
+}
+
+html.light main .bg-\[\#0B0C14\],
+html.light main .bg-\[\#0E101C\],
+html.light main .bg-\[\#0E101C\]\/90 {
+  background-color: #FFFFFF !important;
+}
+
+html.light main .bg-\[\#121422\],
+html.light main .bg-\[\#141728\],
+html.light main .bg-\[\#161828\],
+html.light main .bg-\[\#16182C\] {
+  background-color: #FAF5EA !important;
+}
+
+html.light main .border-\[\#1E2238\],
+html.light main .border-\[\#232740\],
+html.light main .border-\[\#2B2F4C\],
+html.light main .border-\[\#2B304C\] {
+  border-color: #E4E0D5 !important;
+}
+
+html.light main .text-white {
+  color: #233D30 !important;
+}
+
+html.light main .text-\[\#94A3B8\] {
+  color: #77786F !important;
+}
+
 /* Subtle focus ring */
 input:focus,
 select:focus,

@@ -163,7 +163,7 @@ export default function HomePage() {
     <div className="min-h-screen flex flex-col bg-[#0B0C14] text-white selection:bg-[#10B981]/30 selection:text-white">
       <Navbar />
 
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
+      <main className="flex-1 max-w-5xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-4 sm:space-y-8">
         {/* Header Title & Scripture Verse */}
         <div className="text-center space-y-2 pt-2">
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white flex items-center justify-center gap-2">
@@ -358,20 +358,20 @@ export default function HomePage() {
         )}
 
         {/* FULL LEADERBOARD HONOR ROLL TABLE (All columns shown together with LTR names) */}
-        <section className="bg-[#121422] rounded-3xl border border-[#232742] shadow-2xl relative overflow-hidden backdrop-blur-xl">
+        <section className="bg-[#121422] rounded-2xl sm:rounded-3xl border border-[#232742] shadow-2xl relative overflow-hidden backdrop-blur-xl">
           {/* Glowing Green Neon Edge Line at top of container */}
           <div className="h-1 w-full bg-gradient-to-r from-transparent via-[#10B981] to-transparent shadow-[0_0_12px_#10B981]" />
 
           {/* Section Divider Header */}
-          <div className="py-3 px-6 border-b border-[#1E2238] flex items-center justify-between text-xs font-bold text-[#F59E0B]">
-            <div className="flex items-center gap-2">
+          <div className="py-2.5 px-3 sm:py-3 sm:px-6 border-b border-[#1E2238] flex items-center justify-between text-xs font-bold text-[#F59E0B]">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <span className="text-[#10B981]">◆</span>
-              <span className="tracking-wider uppercase">
+              <span className="tracking-wider uppercase text-[11px] sm:text-xs">
                 {language === "ar" ? "قائمة شرف التسبحة والترتيب العام" : "Leaderboard Honor Roll"}
               </span>
               <span className="text-[#10B981]">◆</span>
             </div>
-            <span className="text-[11px] font-normal text-[#94A3B8]">
+            <span className="text-[10px] sm:text-[11px] font-normal text-[#94A3B8]">
               {language === "ar"
                 ? `${tableEntries.length} مخدوم`
                 : `${tableEntries.length} members`}
@@ -388,27 +388,33 @@ export default function HomePage() {
               <p>{t("common.noData")}</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto w-full">
               <table className="w-full text-right rtl:text-right ltr:text-left border-collapse text-xs">
                 <thead>
-                  <tr className="border-b border-[#1E2238] bg-[#161828]/60 text-[11px] font-bold text-[#94A3B8] uppercase">
-                    <th className="py-3.5 px-4 text-center w-16">
-                      {language === "ar" ? "المركز" : "Rank"}
+                  <tr className="border-b border-[#1E2238] bg-[#161828]/60 text-[10px] sm:text-[11px] font-bold text-[#94A3B8] uppercase">
+                    <th className="py-2.5 px-1 sm:py-3.5 sm:px-4 text-center w-8 sm:w-16">
+                      <span className="hidden sm:inline">{language === "ar" ? "المركز" : "Rank"}</span>
+                      <span className="sm:hidden font-black">#</span>
                     </th>
-                    <th className="py-3.5 px-4">
-                      {language === "ar" ? "اسم المخدوم" : "Member Name"}
+                    <th className="py-2.5 px-1.5 sm:py-3.5 sm:px-4 text-start">
+                      <span className="hidden sm:inline">{language === "ar" ? "اسم المخدوم" : "Member Name"}</span>
+                      <span className="sm:hidden font-bold">{language === "ar" ? "المخدوم" : "Name"}</span>
                     </th>
-                    <th className="py-3.5 px-4 text-center">
-                      {language === "ar" ? "مرات الحضور" : "Attendances"}
+                    <th className="py-2.5 px-0.5 sm:py-3.5 sm:px-4 text-center">
+                      <span className="hidden sm:inline">{language === "ar" ? "مرات الحضور" : "Attendances"}</span>
+                      <span className="sm:hidden font-bold">{language === "ar" ? "الحضور" : "Att."}</span>
                     </th>
-                    <th className="py-3.5 px-4 text-center">
-                      {language === "ar" ? "السلسلة الحالية" : "Current Streak"}
+                    <th className="py-2.5 px-0.5 sm:py-3.5 sm:px-4 text-center">
+                      <span className="hidden sm:inline">{language === "ar" ? "السلسلة الحالية" : "Current Streak"}</span>
+                      <span className="sm:hidden font-bold">{language === "ar" ? "الحالية" : "Streak"}</span>
                     </th>
-                    <th className="py-3.5 px-4 text-center">
-                      {language === "ar" ? "أطول سلسلة متصلة" : "Longest Streak"}
+                    <th className="py-2.5 px-0.5 sm:py-3.5 sm:px-4 text-center">
+                      <span className="hidden sm:inline">{language === "ar" ? "أطول سلسلة متصلة" : "Longest Streak"}</span>
+                      <span className="sm:hidden font-bold">{language === "ar" ? "الأطول" : "Best"}</span>
                     </th>
-                    <th className="py-3.5 px-4 text-center">
-                      {language === "ar" ? "المكافآت" : "Rewards"}
+                    <th className="py-2.5 px-0.5 sm:py-3.5 sm:px-4 text-center">
+                      <span className="hidden sm:inline">{language === "ar" ? "المكافآت" : "Rewards"}</span>
+                      <span className="sm:hidden font-bold">{language === "ar" ? "الجوائز" : "Rew."}</span>
                     </th>
                   </tr>
                 </thead>
@@ -425,32 +431,39 @@ export default function HomePage() {
                           }`}
                       >
                         {/* Rank Badge */}
-                        <td className="py-3.5 px-4 text-center">
+                        <td className="py-2 px-1 sm:py-3.5 sm:px-4 text-center">
                           <div className="flex items-center justify-center">
                             <LaurelRankBadge rank={e.rank} size="sm" />
                           </div>
                         </td>
 
                         {/* Member Name (Always LTR) */}
-                        <td className="py-3.5 px-4">
-                          <div className="flex items-center gap-3">
+                        <td className="py-2 px-1 sm:py-3.5 sm:px-4">
+                          <div className="flex items-center gap-1 sm:gap-3">
+                            <MemberAvatar
+                              memberId={e.memberId}
+                              avatarUrl={e.avatarUrl}
+                              fullName={e.fullName}
+                              size="xs"
+                              className="sm:hidden shrink-0 border border-[#2B304C]"
+                            />
                             <MemberAvatar
                               memberId={e.memberId}
                               avatarUrl={e.avatarUrl}
                               fullName={e.fullName}
                               size="md"
-                              className={isCurrent ? "border-2 border-[#F59E0B]" : "border border-[#2B304C]"}
+                              className="hidden sm:block shrink-0 border border-[#2B304C]"
                             />
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2">
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-1">
                                 <span
                                   dir="ltr"
-                                  className="font-bold text-xs sm:text-sm text-white truncate text-left"
+                                  className="font-bold text-[11px] sm:text-sm text-white leading-tight break-words text-left block"
                                 >
                                   {cleanName(e.fullName)}
                                 </span>
                                 {isCurrent && (
-                                  <span className="text-[10px] font-black px-1.5 py-0.2 rounded bg-[#F59E0B] text-[#0B0C14]">
+                                  <span className="text-[8px] sm:text-[10px] font-black px-1 py-0.2 rounded bg-[#F59E0B] text-[#0B0C14] shrink-0">
                                     {language === "ar" ? "أنت" : "You"}
                                   </span>
                                 )}
@@ -460,37 +473,40 @@ export default function HomePage() {
                         </td>
 
                         {/* Attendance Count (مرات الحضور) */}
-                        <td className="py-3.5 px-4 text-center font-semibold text-white whitespace-nowrap">
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#141728] border border-[#232740] text-[#38BDF8]">
-                            <span>◆</span>
-                            <span>{formatSaturdays(e.attendanceCount, language)}</span>
+                        <td className="py-2 px-0.5 sm:py-3.5 sm:px-4 text-center font-semibold text-white whitespace-nowrap">
+                          <span className="inline-flex items-center justify-center gap-0.5 sm:gap-1 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg bg-[#141728] border border-[#232740] text-[#38BDF8] text-[10px] sm:text-xs">
+                            <span className="text-[8px] sm:text-xs">◆</span>
+                            <span className="hidden sm:inline">{formatSaturdays(e.attendanceCount, language)}</span>
+                            <span className="sm:hidden">{e.attendanceCount} {language === "ar" ? "سبت" : "S"}</span>
                           </span>
                         </td>
 
                         {/* Current Streak (السلسلة الحالية) */}
-                        <td className="py-3.5 px-4 text-center font-semibold text-white whitespace-nowrap">
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#141728] border border-[#232740] text-[#10B981]">
-                            <Flame className="w-3.5 h-3.5 text-[#F59E0B]" />
-                            <span>{formatWeeks(e.currentStreak, language)}</span>
+                        <td className="py-2 px-0.5 sm:py-3.5 sm:px-4 text-center font-semibold text-white whitespace-nowrap">
+                          <span className="inline-flex items-center justify-center gap-0.5 sm:gap-1 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg bg-[#141728] border border-[#232740] text-[#10B981] text-[10px] sm:text-xs">
+                            <Flame className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-[#F59E0B]" />
+                            <span className="hidden sm:inline">{formatWeeks(e.currentStreak, language)}</span>
+                            <span className="sm:hidden">{e.currentStreak} {language === "ar" ? "أس" : "w"}</span>
                           </span>
                         </td>
 
                         {/* Longest Streak (أطول سلسلة متصلة) */}
-                        <td className="py-3.5 px-4 text-center font-semibold text-white whitespace-nowrap">
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#141728] border border-[#232740] text-[#A78BFA]">
-                            <span>{formatWeeks(e.longestStreak, language)}</span>
+                        <td className="py-2 px-0.5 sm:py-3.5 sm:px-4 text-center font-semibold text-white whitespace-nowrap">
+                          <span className="inline-flex items-center justify-center gap-0.5 sm:gap-1 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg bg-[#141728] border border-[#232740] text-[#A78BFA] text-[10px] sm:text-xs">
+                            <span className="hidden sm:inline">{formatWeeks(e.longestStreak, language)}</span>
+                            <span className="sm:hidden">{e.longestStreak} {language === "ar" ? "أس" : "w"}</span>
                           </span>
                         </td>
 
                         {/* Rewards (المكافآت) */}
-                        <td className="py-3.5 px-4 text-center font-bold whitespace-nowrap">
+                        <td className="py-2 px-0.5 sm:py-3.5 sm:px-4 text-center font-bold whitespace-nowrap">
                           {e.rewardsCount > 0 ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#F59E0B]/15 border border-[#F59E0B]/40 text-[#F59E0B]">
-                              <Award className="w-3.5 h-3.5" />
+                            <span className="inline-flex items-center justify-center gap-0.5 sm:gap-1 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg bg-[#F59E0B]/15 border border-[#F59E0B]/40 text-[#F59E0B] text-[10px] sm:text-xs">
+                              <Award className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
                               <span>{e.rewardsCount}</span>
                             </span>
                           ) : (
-                            <span className="text-[#64748B] font-mono text-[11px]">—</span>
+                            <span className="text-[#64748B] font-mono text-[10px] sm:text-[11px]">—</span>
                           )}
                         </td>
                       </tr>

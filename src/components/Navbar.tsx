@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useLanguage } from "@/lib/i18n/context";
+import { useTheme } from "@/context/ThemeContext";
 import { CopticCross } from "./CopticCross";
 import { MemberAvatar } from "./MemberAvatar";
 import {
@@ -28,10 +29,13 @@ import {
   ChevronDown,
   UserCheck,
   Globe,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 export function Navbar() {
   const { language, setLanguage, t, dir } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -337,8 +341,29 @@ export function Navbar() {
             )}
           </nav>
 
-          {/* Right Action Tools: Language, Notifications, User, Hamburger */}
+          {/* Right Action Tools: Language, Theme, Notifications, User, Hamburger */}
           <div className="flex items-center gap-1.5 sm:gap-2.5">
+            {/* Dark / Light Mode Switcher Button */}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg border border-[#2B304A] bg-[#161828] hover:bg-[#20243C] text-white transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+              title={theme === "dark" ? (language === "ar" ? "تفعيل الوضع الفاتح" : "Switch to Light Mode") : (language === "ar" ? "تفعيل الوضع الداكن" : "Switch to Dark Mode")}
+              aria-label="Toggle Theme"
+            >
+              {theme === "dark" ? (
+                <>
+                  <Sun className="w-4 h-4 text-[#F59E0B]" />
+                  <span className="hidden md:inline text-xs font-bold">{language === "ar" ? "نهاري" : "Light"}</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-4 h-4 text-[#38BDF8]" />
+                  <span className="hidden md:inline text-xs font-bold">{language === "ar" ? "ليلي" : "Dark"}</span>
+                </>
+              )}
+            </button>
+
             {/* Language Switcher (Desktop) */}
             <button
               onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
@@ -659,6 +684,36 @@ export function Navbar() {
                 </Link>
               </div>
             )}
+
+            {/* Mobile Footer: Theme & Language Toggle */}
+            <div className="pt-3 mt-3 border-t border-[#1E2132] flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="flex-1 py-2 px-3 rounded-lg border border-[#2B304A] bg-[#161828] text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {theme === "dark" ? (
+                  <>
+                    <Sun className="w-4 h-4 text-[#F59E0B]" />
+                    <span>{language === "ar" ? "الوضع الفاتح" : "Light Mode"}</span>
+                  </>
+                ) : (
+                  <>
+                    <Moon className="w-4 h-4 text-[#38BDF8]" />
+                    <span>{language === "ar" ? "الوضع الليلي" : "Dark Mode"}</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
+                className="flex-1 py-2 px-3 rounded-lg border border-[#2B304A] bg-[#161828] text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Globe className="w-4 h-4 text-[#F59E0B]" />
+                <span>{language === "ar" ? "English" : "العربية"}</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
