@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Rounded Church Background Badge -->
+  <rect width="64" height="64" rx="16" fill="#141724"/>
+  <rect x="1" y="1" width="62" height="62" rx="15" stroke="#B58A3A" stroke-width="2" stroke-opacity="0.8"/>
+  
+  <!-- Coptic Cross in Warm Gold -->
+  <g stroke="#F59E0B" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Vertical Beam with Flared Ends -->
+    <path d="M32 10V54M32 10L27 15M32 10L37 15M32 54L27 49M32 54L37 49"/>
+    <!-- Horizontal Beam with Flared Ends -->
+    <path d="M10 32H54M10 32L15 27M10 32L15 37M54 32L49 27M54 32L49 37"/>
+  </g>
+  
+  <!-- Four Evangelist Dots in Quadrants -->
+  <circle cx="21" cy="21" r="2.5" fill="#F59E0B"/>
+  <circle cx="43" cy="21" r="2.5" fill="#F59E0B"/>
+  <circle cx="21" cy="43" r="2.5" fill="#F59E0B"/>
+  <circle cx="43" cy="43" r="2.5" fill="#F59E0B"/>
+</svg>
+

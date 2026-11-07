@@ -80,7 +80,7 @@ export async function reviewStreakResetRequest(params: {
         type: "STREAK",
       },
     });
-  });
+  }, { maxWait: 10000, timeout: 20000 });
 
   // Recompute member stats
   await recalculateMemberStats(req.memberId);

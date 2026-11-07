@@ -45,6 +45,7 @@ export default function HomePage() {
   // Only two tabs: "streak" (السلسلة الحالية) and "all-time" (عدد الحضور)
   const [boardType, setBoardType] = useState<"streak" | "all-time">("streak");
   const [entries, setEntries] = useState<any[]>([]);
+  const [capacityStats, setCapacityStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -75,10 +76,29 @@ export default function HomePage() {
       const res = await fetch(url);
       const data = await res.json();
       setEntries(data.entries || []);
+      if (data.capacityStats) {
+        setCapacityStats(data.capacityStats);
+      }
     } catch {
       setEntries([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const formatPraiseDate = (dateStr?: string) => {
+    if (!dateStr) return "";
+    try {
+      const d = new Date(dateStr);
+      return d.toLocaleDateString(language === "ar" ? "ar-EG" : "en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        timeZone: "UTC",
+      });
+    } catch {
+      return dateStr;
     }
   };
 
@@ -225,46 +245,48 @@ export default function HomePage() {
 
         {/* Filter Capsule Tabs (Only two tabs: السلسلة الحالية & عدد الحضور) */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-          {/* Neon Capsule Tabs */}
+          {/* Capsule Tabs without Neon */}
           <div className="bg-[#EFEDE5] dark:bg-[#121422] p-1.5 rounded-2xl border border-[#E4E0D5] dark:border-[#232740] flex items-center gap-1 w-full sm:w-auto shadow-inner">
             <button
               onClick={() => setBoardType("streak")}
               className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${boardType === "streak"
-                ? "bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-[#0B0C14] shadow-md font-black"
+                ? "bg-[#233D30] text-white dark:bg-[#1E2238] dark:text-white dark:border dark:border-[#B58A3A]/50 shadow-xs"
                 : "text-[#77786F] dark:text-[#94A3B8] hover:text-[#233D30] dark:hover:text-white hover:bg-black/5 dark:hover:bg-[#1A1D30]"
                 }`}
             >
-              <Flame className="w-3.5 h-3.5" />
+              <Flame className="w-3.5 h-3.5 text-[#F59E0B]" />
               <span>{language === "ar" ? "السلسلة الحالية" : "Current Streak"}</span>
             </button>
 
             <button
               onClick={() => setBoardType("all-time")}
               className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${boardType === "all-time"
-                ? "bg-gradient-to-r from-[#10B981] to-[#059669] text-[#0B0C14] shadow-md font-black"
-                : "text-[#94A3B8] hover:text-white hover:bg-[#1A1D30]"
+                ? "bg-[#233D30] text-white dark:bg-[#1E2238] dark:text-white dark:border dark:border-[#B58A3A]/50 shadow-xs"
+                : "text-[#77786F] dark:text-[#94A3B8] hover:text-[#233D30] dark:hover:text-white hover:bg-black/5 dark:hover:bg-[#1A1D30]"
                 }`}
             >
-              <CalendarCheck className="w-3.5 h-3.5" />
+              <CalendarCheck className="w-3.5 h-3.5 text-[#B58A3A] dark:text-[#F59E0B]" />
               <span>{language === "ar" ? "عدد الحضور" : "Total Attendance"}</span>
             </button>
           </div>
 
-          {/* Quick Search with placeholder: ابحث عن اسم */}
-          <div className="relative w-full sm:w-64">
-            <Search className="w-3.5 h-3.5 absolute top-3 rtl:right-3.5 ltr:left-3.5 text-[#64748B]" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={language === "ar" ? "ابحث عن اسم" : "Search name..."}
-              className="w-full text-xs py-2 rtl:pr-9 rtl:pl-3 ltr:pl-9 ltr:pr-3 rounded-xl border border-[#232740] bg-[#121422] text-white placeholder-[#64748B] focus:border-[#F59E0B] focus:bg-[#161828] transition-colors"
-            />
-          </div>
+          {/* Quick Search - only shown when viewing member streak leaderboard */}
+          {boardType === "streak" && (
+            <div className="relative w-full sm:w-64">
+              <Search className="w-3.5 h-3.5 absolute top-3 rtl:right-3.5 ltr:left-3.5 text-[#77786F] dark:text-[#64748B]" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={language === "ar" ? "ابحث عن اسم" : "Search name..."}
+                className="w-full text-xs py-2 rtl:pr-9 rtl:pl-3 ltr:pl-9 ltr:pr-3 rounded-xl border border-[#E4E0D5] dark:border-[#232740] bg-[#F7F6F1] dark:bg-[#121422] text-[#252922] dark:text-white placeholder-[#77786F] dark:placeholder-[#64748B] focus:border-[#B58A3A] focus:bg-white dark:focus:bg-[#161828] transition-colors"
+              />
+            </div>
+          )}
         </div>
 
-        {/* PODIUM SECTION (Dynamically conditionally rendered according to exact tie rules) */}
-        {podiumCount > 0 && (
+        {/* PODIUM SECTION (Only shown in Streak Leaderboard mode when qualified) */}
+        {boardType === "streak" && podiumCount > 0 && (
           <section className="pt-4 pb-2">
             <div className="flex items-end justify-center gap-3 sm:gap-6 max-w-2xl mx-auto px-2">
               {/* 2nd Place (Left) - Only if 2nd place is uniquely qualified */}
@@ -357,8 +379,9 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* FULL LEADERBOARD HONOR ROLL TABLE (All columns shown together with LTR names) */}
-        <section className="bg-white dark:bg-[#121422] rounded-2xl sm:rounded-3xl border border-[#E4E0D5] dark:border-[#232742] shadow-md dark:shadow-2xl relative overflow-hidden backdrop-blur-xl">
+        {/* STREAK LEADERBOARD VIEW */}
+        {boardType === "streak" && (
+          <section className="bg-white dark:bg-[#121422] rounded-2xl sm:rounded-3xl border border-[#E4E0D5] dark:border-[#232742] shadow-sm relative overflow-hidden backdrop-blur-xl">
           {/* Section Divider Header */}
           <div className="py-2.5 px-3 sm:py-3 sm:px-6 border-b border-[#E4E0D5] dark:border-[#1E2238] flex items-center justify-between text-xs font-bold text-[#B58A3A] dark:text-[#F59E0B]">
             <div className="flex items-center gap-1.5 sm:gap-2">
@@ -514,6 +537,129 @@ export default function HomePage() {
             </div>
           )}
         </section>
+        )}
+
+        {/* TOTAL ATTENDANCE CAPACITY STATS VIEW (Strictly NO NEON) */}
+        {boardType === "all-time" && (
+          <section className="pt-2">
+            {loading ? (
+              <div className="bg-white dark:bg-[#121422] rounded-3xl border border-[#E4E0D5] dark:border-[#232742] p-12 text-center text-xs text-[#77786F] dark:text-[#94A3B8]">
+                {t("common.loading")}
+              </div>
+            ) : !capacityStats || (!capacityStats.lastSession && !capacityStats.topCapacitySession) ? (
+              <div className="bg-white dark:bg-[#121422] rounded-3xl border border-[#E4E0D5] dark:border-[#232742] p-12 text-center text-xs text-[#77786F] dark:text-[#94A3B8] space-y-2">
+                <CalendarCheck className="w-10 h-10 text-[#B58A3A] mx-auto opacity-40" />
+                <p className="font-bold text-sm text-[#252922] dark:text-white">
+                  {language === "ar" ? "لا توجد بيانات حضور مسجلة حتى الآن" : "No praise attendance data recorded yet"}
+                </p>
+              </div>
+            ) : capacityStats.isNewHighscore ? (
+              /* Highscore Celebration Card: Warm Church Dignity, Strictly NO NEON */
+              <div className="bg-white dark:bg-[#121422] rounded-3xl border-2 border-[#B58A3A] dark:border-[#B58A3A]/80 p-6 sm:p-10 text-center max-w-xl mx-auto shadow-sm dark:shadow-md">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FAF5EA] dark:bg-[#1C2038] border border-[#B58A3A] text-[#B58A3A] dark:text-[#F59E0B] font-black text-xs sm:text-sm tracking-wide">
+                  <Trophy className="w-4 h-4 text-[#B58A3A] dark:text-[#F59E0B]" />
+                  <span>{language === "ar" ? "( رقم قياسي جديد )" : "( New Highscore )"}</span>
+                </div>
+
+                <div className="mt-6">
+                  <span className="text-5xl sm:text-7xl font-black text-[#233D30] dark:text-white font-mono tracking-tight">
+                    {capacityStats.lastSession?.presentCount ?? 0}
+                  </span>
+                  <span className="text-base sm:text-xl font-bold text-[#77786F] dark:text-[#94A3B8] ms-2">
+                    {language === "ar" ? "حاضر" : "Attendees"}
+                  </span>
+                </div>
+
+                <div className="mt-5 pt-4 border-t border-[#E4E0D5] dark:border-[#1E2238] space-y-1">
+                  <p className="text-xs sm:text-sm font-bold text-[#252922] dark:text-white">
+                    {formatPraiseDate(capacityStats.lastSession?.date)}
+                  </p>
+                  {capacityStats.previousRecord > 0 && (
+                    <p className="text-xs text-[#B58A3A] dark:text-[#F59E0B] font-semibold">
+                      {language === "ar"
+                        ? `تجاوز الرقم القياسي السابق (${capacityStats.previousRecord} حاضر)`
+                        : `Surpassed previous record of ${capacityStats.previousRecord} attendees`}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              /* Side-by-Side: Last Praise Day & Top Capacity Record */
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto">
+                {/* Card 1: Last Praise Day */}
+                <div className="bg-white dark:bg-[#121422] rounded-2xl sm:rounded-3xl border border-[#E4E0D5] dark:border-[#232742] p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between pb-3 border-b border-[#EFEDE5] dark:border-[#1E2238]">
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#77786F] dark:text-[#94A3B8]">
+                        {language === "ar" ? "آخر تسبحة" : "Last Praise Day"}
+                      </span>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#EFEDE5] dark:bg-[#1E2238] text-[#77786F] dark:text-[#94A3B8]">
+                        {language === "ar" ? "حسب كشف الحضور" : "Attendance Sheet"}
+                      </span>
+                    </div>
+
+                    <div className="mt-4">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-4xl sm:text-5xl font-black text-[#233D30] dark:text-white font-mono">
+                          {capacityStats.lastSession?.presentCount ?? 0}
+                        </span>
+                        <span className="text-sm font-bold text-[#77786F] dark:text-[#94A3B8]">
+                          {language === "ar" ? "حاضر" : "Attendees"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-[#EFEDE5] dark:border-[#1E2238] flex items-center justify-between text-xs">
+                    <span className="font-bold text-[#252922] dark:text-[#CBD5E1]">
+                      {formatPraiseDate(capacityStats.lastSession?.date)}
+                    </span>
+                    {capacityStats.lastSession?.absentCount !== undefined && (
+                      <span className="text-[11px] font-mono text-[#77786F] dark:text-[#94A3B8]">
+                        {capacityStats.lastSession.absentCount} {language === "ar" ? "غائب" : "absent"}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Card 2: Top Capacity Day */}
+                <div className="bg-white dark:bg-[#121422] rounded-2xl sm:rounded-3xl border border-[#B58A3A]/40 dark:border-[#B58A3A]/40 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between pb-3 border-b border-[#EFEDE5] dark:border-[#1E2238]">
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#B58A3A] dark:text-[#F59E0B]">
+                        {language === "ar" ? "أعلى حضور قياسي" : "Top Capacity Day"}
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#FAF5EA] dark:bg-[#1E2238] text-[#B58A3A] dark:text-[#F59E0B] border border-[#B58A3A]/30">
+                        <Trophy className="w-3 h-3 text-[#B58A3A] dark:text-[#F59E0B]" />
+                        <span>{language === "ar" ? "الرقم القياسي" : "Record"}</span>
+                      </span>
+                    </div>
+
+                    <div className="mt-4">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-4xl sm:text-5xl font-black text-[#B58A3A] dark:text-[#F59E0B] font-mono">
+                          {capacityStats.topCapacitySession?.presentCount ?? 0}
+                        </span>
+                        <span className="text-sm font-bold text-[#77786F] dark:text-[#94A3B8]">
+                          {language === "ar" ? "حاضر" : "Attendees"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-[#EFEDE5] dark:border-[#1E2238] flex items-center justify-between text-xs">
+                    <span className="font-bold text-[#252922] dark:text-[#CBD5E1]">
+                      {formatPraiseDate(capacityStats.topCapacitySession?.date)}
+                    </span>
+                    <span className="text-[11px] font-semibold text-[#77786F] dark:text-[#94A3B8]">
+                      {language === "ar" ? "أعلى تسبحة في التاريخ" : "All-time peak"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
       </main>
     </div>
   );

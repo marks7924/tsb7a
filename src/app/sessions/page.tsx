@@ -247,13 +247,12 @@ export default function SessionsPage() {
     return (
       <div
         key={s.id}
-        className={`p-4 sm:p-5 rounded-2xl border transition-all ${
-          isOff
+        className={`p-4 sm:p-5 rounded-2xl border transition-all ${isOff
             ? "bg-[#FAF5EA] dark:bg-[#F59E0B]/10 border-[#B58A3A]/40 dark:border-[#F59E0B]/30"
             : isActive
-            ? "bg-white dark:bg-[#161828] border-[#233D30] dark:border-[#10B981] ring-1 ring-[#233D30]/20 dark:ring-[#10B981]/30 shadow-md"
-            : "bg-white dark:bg-[#121422] border-[#E4E0D5] dark:border-[#262A42] shadow-xs"
-        }`}
+              ? "bg-white dark:bg-[#161828] border-[#233D30] dark:border-[#10B981] ring-1 ring-[#233D30]/20 dark:ring-[#10B981]/30 shadow-md"
+              : "bg-white dark:bg-[#121422] border-[#E4E0D5] dark:border-[#262A42] shadow-xs"
+          }`}
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
@@ -267,13 +266,12 @@ export default function SessionsPage() {
             </span>
             {badge && (
               <span
-                className={`text-[10px] font-black px-2 py-0.5 rounded-md ${
-                  badge.type === "today"
+                className={`text-[10px] font-black px-2 py-0.5 rounded-md ${badge.type === "today"
                     ? "bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/30"
                     : badge.type === "next"
-                    ? "bg-[#38BDF8]/20 text-[#38BDF8] border border-[#38BDF8]/30"
-                    : "bg-[#77786F]/20 text-[#77786F] dark:text-[#94A3B8]"
-                }`}
+                      ? "bg-[#38BDF8]/20 text-[#38BDF8] border border-[#38BDF8]/30"
+                      : "bg-[#77786F]/20 text-[#77786F] dark:text-[#94A3B8]"
+                  }`}
               >
                 {language === "ar" ? badge.badgeAr : badge.badgeEn}
               </span>
@@ -282,13 +280,12 @@ export default function SessionsPage() {
 
           <div className="flex items-center gap-1.5">
             <span
-              className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md ${
-                isOff
+              className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md ${isOff
                   ? "bg-[#B58A3A]/20 text-[#B58A3A] dark:text-[#F59E0B]"
                   : isActive
-                  ? "bg-[#EEF5F1] text-[#233D30] dark:bg-[#10B981]/20 dark:text-[#10B981]"
-                  : "bg-[#EFEDE5] dark:bg-[#1E2238] text-[#77786F] dark:text-[#94A3B8]"
-              }`}
+                    ? "bg-[#EEF5F1] text-[#233D30] dark:bg-[#10B981]/20 dark:text-[#10B981]"
+                    : "bg-[#EFEDE5] dark:bg-[#1E2238] text-[#77786F] dark:text-[#94A3B8]"
+                }`}
             >
               {t(`statuses.${s.status}`)}
             </span>
@@ -391,11 +388,10 @@ export default function SessionsPage() {
             <button
               type="button"
               onClick={() => setViewTab("CURRENT")}
-              className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${
-                viewTab === "CURRENT"
+              className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${viewTab === "CURRENT"
                   ? "bg-[#233D30] text-white shadow-xs dark:bg-[#1E2238] dark:border dark:border-[#F59E0B]/40"
                   : "text-[#77786F] dark:text-[#94A3B8] hover:text-[#233D30] dark:hover:text-white"
-              }`}
+                }`}
             >
               <Sparkles className="w-3.5 h-3.5 text-[#F59E0B]" />
               <span>
@@ -408,11 +404,10 @@ export default function SessionsPage() {
             <button
               type="button"
               onClick={() => setViewTab("ARCHIVE")}
-              className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${
-                viewTab === "ARCHIVE"
+              className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 ${viewTab === "ARCHIVE"
                   ? "bg-[#233D30] text-white shadow-xs dark:bg-[#1E2238] dark:border dark:border-[#F59E0B]/40"
                   : "text-[#77786F] dark:text-[#94A3B8] hover:text-[#233D30] dark:hover:text-white"
-              }`}
+                }`}
             >
               <Archive className="w-3.5 h-3.5 text-[#38BDF8]" />
               <span>

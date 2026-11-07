@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { getAnnualLeaderboard, getAllTimeLeaderboard, getStreakLeaderboard } from "@/lib/services/leaderboardService";
+import {
+  getAnnualLeaderboard,
+  getAllTimeLeaderboard,
+  getStreakLeaderboard,
+  getPraiseCapacityStats,
+} from "@/lib/services/leaderboardService";
 
 export async function GET(req: Request) {
   try {
@@ -13,8 +18,11 @@ export async function GET(req: Request) {
     }
 
     if (type === "all-time") {
-      const data = await getAllTimeLeaderboard();
-      return NextResponse.json({ type: "all-time", entries: data });
+      const [entries, capacityStats] = await Promise.all([
+        getAllTimeLeaderboard(),
+        getPraiseCapacityStats(),
+      ]);
+      return NextResponse.json({ type: "all-time", entries, capacityStats });
     }
 
     const data = await getAnnualLeaderboard(year);

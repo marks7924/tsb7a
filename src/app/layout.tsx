@@ -20,6 +20,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "منصة تسبحة الكنيسة | Church Tasbeha Attendance & Rewards",
   description: "نظام إدارة الحضور الأسبوعي والمكافآت لتسبحة الكنيسة القبطية الأرثوذكسية",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

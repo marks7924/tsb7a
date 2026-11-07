@@ -214,3 +214,120 @@ export async function getGeneralAnalytics() {
   };
 }
 
+export interface PraiseCapacityStats {
+  lastSession: {
+    id: string;
+    date: string;
+    title: string;
+    presentCount: number;
+    absentCount: number;
+  } | null;
+  topCapacitySession: {
+    id: string;
+    date: string;
+    title: string;
+    presentCount: number;
+  } | null;
+  isNewHighscore: boolean;
+  previousRecord: number;
+}
+
+export async function getPraiseCapacityStats(): Promise<PraiseCapacityStats> {
+  const sessions = await prisma.saturdaySession.findMany({
+    where: {
+      status: { notIn: ["CANCELLED", "OFF"] },
+    },
+    orderBy: { date: "desc" },
+    include: {
+      attendances: {
+        select: { status: true },
+      },
+    },
+  });
+
+  const now = new Date();
+  const todayEnd = new Date();
+  todayEnd.setHours(23, 59, 59, 999);
+
+  // Eligible sessions: either has attendance taken or is today/past
+  const eligible = sessions
+    .map((s) => {
+      const presentCount = s.attendances.filter((a) => a.status === "PRESENT").length;
+      const absentCount = s.attendances.filter((a) => a.status === "ABSENT").length;
+      return {
+        id: s.id,
+        date: s.date.toISOString(),
+        title: s.title || "",
+        status: s.status,
+        presentCount,
+        absentCount,
+        rawDate: s.date,
+      };
+    })
+    .filter(
+      (s) =>
+        s.presentCount > 0 ||
+        s.absentCount > 0 ||
+        s.rawDate <= todayEnd ||
+        s.status === "ACTIVE" ||
+        s.status === "COMPLETED"
+    );
+
+  if (eligible.length === 0) {
+    return {
+      lastSession: null,
+      topCapacitySession: null,
+      isNewHighscore: false,
+      previousRecord: 0,
+    };
+  }
+
+  // The most recent praise session
+  const lastSession = eligible[0];
+
+  // All other eligible sessions
+  const otherSessions = eligible.filter((s) => s.id !== lastSession.id);
+
+  let prevTopSession: (typeof eligible)[number] | null = null;
+  let prevRecord = 0;
+
+  if (otherSessions.length > 0) {
+    const sortedOthers = [...otherSessions].sort((a, b) => b.presentCount - a.presentCount);
+    prevTopSession = sortedOthers[0];
+    prevRecord = prevTopSession.presentCount;
+  }
+
+  // New highscore condition:
+  // If the last praise attendance strictly exceeds the previous record
+  const isNewHighscore =
+    prevRecord > 0
+      ? lastSession.presentCount > prevRecord
+      : otherSessions.length > 0 && lastSession.presentCount > 0;
+
+  const topCapacitySession = isNewHighscore
+    ? lastSession
+    : prevTopSession && prevTopSession.presentCount >= lastSession.presentCount
+      ? prevTopSession
+      : lastSession;
+
+  return {
+    lastSession: {
+      id: lastSession.id,
+      date: lastSession.date,
+      title: lastSession.title,
+      presentCount: lastSession.presentCount,
+      absentCount: lastSession.absentCount,
+    },
+    topCapacitySession: topCapacitySession
+      ? {
+        id: topCapacitySession.id,
+        date: topCapacitySession.date,
+        title: topCapacitySession.title,
+        presentCount: topCapacitySession.presentCount,
+      }
+      : null,
+    isNewHighscore,
+    previousRecord: prevRecord,
+  };
+}
+

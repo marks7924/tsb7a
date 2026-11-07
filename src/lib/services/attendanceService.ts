@@ -355,31 +355,32 @@ export async function markAttendance(params: {
 
   const previousStreak = member.stats?.currentStreak || 0;
 
-  const result = await prisma.$transaction(async (tx) => {
-    const att = await tx.attendance.upsert({
-      where: {
-        memberId_sessionId: {
-          memberId,
-          sessionId,
-        },
-      },
-      create: {
+  // Direct atomic upsert - eliminates pool transaction wait & timeout errors
+  const att = await prisma.attendance.upsert({
+    where: {
+      memberId_sessionId: {
         memberId,
         sessionId,
-        status,
-        method,
-        markedById: actorId,
       },
-      update: {
-        status,
-        method,
-        updatedById: actorId,
-        updatedAt: new Date(),
-      },
-    });
+    },
+    create: {
+      memberId,
+      sessionId,
+      status,
+      method,
+      markedById: actorId,
+    },
+    update: {
+      status,
+      method,
+      updatedById: actorId,
+      updatedAt: new Date(),
+    },
+  });
 
+  try {
     if (status === "ABSENT") {
-      const existingReq = await tx.streakResetRequest.findFirst({
+      const existingReq = await prisma.streakResetRequest.findFirst({
         where: {
           memberId,
           sessionId,
@@ -387,7 +388,7 @@ export async function markAttendance(params: {
       });
 
       if (!existingReq) {
-        await tx.streakResetRequest.create({
+        await prisma.streakResetRequest.create({
           data: {
             memberId,
             sessionId,
@@ -398,7 +399,7 @@ export async function markAttendance(params: {
         });
       }
     } else {
-      await tx.streakResetRequest.deleteMany({
+      await prisma.streakResetRequest.deleteMany({
         where: {
           memberId,
           sessionId,
@@ -406,13 +407,13 @@ export async function markAttendance(params: {
         },
       });
     }
-
-    return att;
-  });
+  } catch (streakErr) {
+    console.warn("Streak reset request sync skipped:", streakErr);
+  }
 
   await recalculateMemberStats(memberId);
 
-  return result;
+  return att;
 }
 
 /**
@@ -597,7 +598,7 @@ export async function quickAddMemberToAttendance(params: {
     }
 
     return m;
-  });
+  }, { maxWait: 10000, timeout: 20000 });
 
   await recalculateMemberStats(member.id);
 
