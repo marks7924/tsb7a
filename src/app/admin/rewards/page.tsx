@@ -97,7 +97,7 @@ export default function RewardsAdminPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-right ltr:text-left text-xs">
                 <thead>
-                  <tr className="border-b border-[#E4E0D5] bg-[#EFEDE5]/60 text-[11px] font-bold text-[#77786F] uppercase tracking-wider">
+                  <tr className="border-b border-[#E4E0D5] dark:border-[#232740] bg-[#EFEDE5]/60 dark:bg-[#161828] text-[11px] font-bold text-[#77786F] dark:text-[#94A3B8] uppercase tracking-wider">
                     <th className="py-3 px-4">{t("common.name")}</th>
                     <th className="py-3 px-4">{t("common.phone")}</th>
                     <th className="py-3 px-4 text-center">

@@ -160,24 +160,24 @@ export default function HomePage() {
   const tableEntries = filteredEntries.slice(podiumCount);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0B0C14] text-white selection:bg-[#10B981]/30 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#F7F6F1] dark:bg-[#0B0C14] text-[#252922] dark:text-white selection:bg-[#10B981]/30 selection:text-white">
       <Navbar />
 
       <main className="flex-1 max-w-5xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-4 sm:space-y-8">
         {/* Header Title & Scripture Verse */}
         <div className="text-center space-y-2 pt-2">
-          <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white flex items-center justify-center gap-2">
-            <span>{language === "ar" ? "لوحة شرف التسبحة" : "Tasbeha Leaderboard"}</span>
+          <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-[#233D30] dark:text-white flex items-center justify-center gap-2">
+            <span>{language === "ar" ? "لوحة حضور التسبحة" : "Tasbeha Leaderboard"}</span>
             <Trophy className="w-6 h-6 sm:w-8 sm:h-8 text-[#F59E0B] inline-block animate-pulse" />
           </h1>
 
-          <div className="text-xs sm:text-sm text-[#94A3B8] max-w-xl mx-auto leading-relaxed space-y-1">
-            <p className="font-semibold text-[#FDE68A]">
+          <div className="text-xs sm:text-sm text-[#77786F] dark:text-[#94A3B8] max-w-xl mx-auto leading-relaxed space-y-1">
+            <p className="font-semibold text-[#B58A3A] dark:text-[#FDE68A]">
               {language === "ar"
                 ? "«سَبِّحُوا الرَّبَّ لأَنَّ الرَّبَّ صَالِحٌ. رَنِّمُوا لاسْمِهِ لأَنَّ ذَاكَ حُلْوٌ.» (مز 135: 3)"
                 : "“Praise the Lord, for the Lord is good; sing praises to His name, for it is pleasant.” (Psalm 135:3)"}
             </p>
-            <p className="text-xs text-[#94A3B8]">
+            <p className="text-xs text-[#77786F] dark:text-[#94A3B8]">
               {language === "ar"
                 ? "لوحه ترتيب حضور تسبحه نصف الليل"
                 : "Midnight Praises Attendance Leaderboard"}
@@ -187,7 +187,7 @@ export default function HomePage() {
 
         {/* Personalized User Status Bar (if logged in) */}
         {currentUser && (
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-[#16182C] via-[#1A1D34] to-[#16182C] border border-[#2B2F4C] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-gradient-to-r dark:from-[#16182C] dark:via-[#1A1D34] dark:to-[#16182C] border border-[#E4E0D5] dark:border-[#2B2F4C] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
             <div className="flex items-center gap-3">
               <MemberAvatar
                 memberId={currentUser.memberId}
@@ -198,14 +198,14 @@ export default function HomePage() {
               />
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-xs sm:text-sm text-white" dir="ltr">
+                  <h3 className="font-bold text-xs sm:text-sm text-[#252922] dark:text-white" dir="ltr">
                     {cleanName(currentUser.fullName)}
                   </h3>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#242944] text-[#F59E0B] border border-[#F59E0B]/30">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#FAF5EA] dark:bg-[#242944] text-[#B58A3A] dark:text-[#F59E0B] border border-[#B58A3A]/30 dark:border-[#F59E0B]/30">
                     {t(`roles.${currentUser.role}`)}
                   </span>
                 </div>
-                <p className="text-[11px] text-[#94A3B8] mt-0.5 font-mono">
+                <p className="text-[11px] text-[#77786F] dark:text-[#94A3B8] mt-0.5 font-mono">
                   {currentUser.phone}
                 </p>
               </div>
@@ -226,12 +226,12 @@ export default function HomePage() {
         {/* Filter Capsule Tabs (Only two tabs: السلسلة الحالية & عدد الحضور) */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
           {/* Neon Capsule Tabs */}
-          <div className="bg-[#121422] p-1.5 rounded-2xl border border-[#232740] flex items-center gap-1 w-full sm:w-auto shadow-inner">
+          <div className="bg-[#EFEDE5] dark:bg-[#121422] p-1.5 rounded-2xl border border-[#E4E0D5] dark:border-[#232740] flex items-center gap-1 w-full sm:w-auto shadow-inner">
             <button
               onClick={() => setBoardType("streak")}
               className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${boardType === "streak"
                 ? "bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-[#0B0C14] shadow-md font-black"
-                : "text-[#94A3B8] hover:text-white hover:bg-[#1A1D30]"
+                : "text-[#77786F] dark:text-[#94A3B8] hover:text-[#233D30] dark:hover:text-white hover:bg-black/5 dark:hover:bg-[#1A1D30]"
                 }`}
             >
               <Flame className="w-3.5 h-3.5" />
@@ -358,17 +358,17 @@ export default function HomePage() {
         )}
 
         {/* FULL LEADERBOARD HONOR ROLL TABLE (All columns shown together with LTR names) */}
-        <section className="bg-[#121422] rounded-2xl sm:rounded-3xl border border-[#232742] shadow-2xl relative overflow-hidden backdrop-blur-xl">
+        <section className="bg-white dark:bg-[#121422] rounded-2xl sm:rounded-3xl border border-[#E4E0D5] dark:border-[#232742] shadow-md dark:shadow-2xl relative overflow-hidden backdrop-blur-xl">
           {/* Section Divider Header */}
-          <div className="py-2.5 px-3 sm:py-3 sm:px-6 border-b border-[#1E2238] flex items-center justify-between text-xs font-bold text-[#F59E0B]">
+          <div className="py-2.5 px-3 sm:py-3 sm:px-6 border-b border-[#E4E0D5] dark:border-[#1E2238] flex items-center justify-between text-xs font-bold text-[#B58A3A] dark:text-[#F59E0B]">
             <div className="flex items-center gap-1.5 sm:gap-2">
               <span className="text-[#10B981]">◆</span>
-              <span className="tracking-wider uppercase text-[11px] sm:text-xs">
-                {language === "ar" ? "قائمة شرف التسبحة والترتيب العام" : "Leaderboard Honor Roll"}
+              <span className="tracking-wider uppercase text-[11px] sm:text-xs text-[#233D30] dark:text-[#F59E0B]">
+                {language === "ar" ? "قائمة حضور التسبحة والترتيب العام" : "Leaderboard Honor Roll"}
               </span>
               <span className="text-[#10B981]">◆</span>
             </div>
-            <span className="text-[10px] sm:text-[11px] font-normal text-[#94A3B8]">
+            <span className="text-[10px] sm:text-[11px] font-normal text-[#77786F] dark:text-[#94A3B8]">
               {language === "ar"
                 ? `${tableEntries.length} مخدوم`
                 : `${tableEntries.length} members`}
@@ -376,11 +376,11 @@ export default function HomePage() {
           </div>
 
           {loading ? (
-            <div className="text-center py-16 text-xs text-[#94A3B8]">
+            <div className="text-center py-16 text-xs text-[#77786F] dark:text-[#94A3B8]">
               {t("common.loading")}
             </div>
           ) : tableEntries.length === 0 ? (
-            <div className="text-center py-16 text-xs text-[#94A3B8] space-y-2">
+            <div className="text-center py-16 text-xs text-[#77786F] dark:text-[#94A3B8] space-y-2">
               <Trophy className="w-8 h-8 text-[#64748B] mx-auto opacity-40" />
               <p>{t("common.noData")}</p>
             </div>
@@ -388,7 +388,7 @@ export default function HomePage() {
             <div className="overflow-x-auto w-full">
               <table className="w-full text-right rtl:text-right ltr:text-left border-collapse text-xs">
                 <thead>
-                  <tr className="border-b border-[#1E2238] bg-[#161828]/60 text-[10px] sm:text-[11px] font-bold text-[#94A3B8] uppercase">
+                  <tr className="border-b border-[#E4E0D5] dark:border-[#1E2238] bg-[#EFEDE5]/80 dark:bg-[#161828]/60 text-[10px] sm:text-[11px] font-bold text-[#77786F] dark:text-[#94A3B8] uppercase">
                     <th className="py-2.5 px-1 sm:py-3.5 sm:px-4 text-center w-8 sm:w-16">
                       <span className="hidden sm:inline">{language === "ar" ? "المركز" : "Rank"}</span>
                       <span className="sm:hidden font-black">#</span>
@@ -415,7 +415,7 @@ export default function HomePage() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#1C2036]">
+                <tbody className="divide-y divide-[#E4E0D5] dark:divide-[#1C2036]">
                   {tableEntries.map((e) => {
                     const isCurrent = currentUser?.memberId === e.memberId;
 
@@ -423,8 +423,8 @@ export default function HomePage() {
                       <tr
                         key={e.memberId}
                         className={`transition-colors ${isCurrent
-                          ? "bg-[#1C2038] border-s-4 border-[#F59E0B]"
-                          : "hover:bg-[#16192C]"
+                          ? "bg-[#FAF5EA] dark:bg-[#1C2038] border-s-4 border-[#F59E0B]"
+                          : "hover:bg-[#F7F6F1] dark:hover:bg-[#16192C]"
                           }`}
                       >
                         {/* Rank Badge */}
@@ -455,7 +455,7 @@ export default function HomePage() {
                               <div className="flex items-center gap-1">
                                 <span
                                   dir="ltr"
-                                  className="font-bold text-[11px] sm:text-sm text-white leading-tight break-words text-left block"
+                                  className="font-bold text-[11px] sm:text-sm text-[#252922] dark:text-white leading-tight break-words text-left block"
                                 >
                                   {cleanName(e.fullName)}
                                 </span>

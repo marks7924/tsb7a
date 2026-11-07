@@ -14,6 +14,7 @@ import {
   ArrowRight,
   Info,
 } from "lucide-react";
+import { MemberSearchSelect } from "@/components/MemberSearchSelect";
 
 export default function MergeAccountsPage() {
   const { language, t } = useLanguage();
@@ -168,41 +169,25 @@ export default function MergeAccountsPage() {
           <div className="bg-white rounded-xl border border-[#E4E0D5] shadow-xs p-6 space-y-6">
             {/* Member Selection Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-[#252922] mb-1.5">
-                  1. {t("merge.primaryMember")}
-                </label>
-                <select
-                  value={survivingId}
-                  onChange={(e) => setSurvivingId(e.target.value)}
-                  className="w-full text-xs py-2 px-3 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] font-medium text-[#252922]"
-                >
-                  <option value="">-- {language === "ar" ? "اختر العضو الأساسي" : "Select Surviving"} --</option>
-                  {members.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      {m.fullName} ({m.phone})
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <MemberSearchSelect
+                label={`1. ${t("merge.primaryMember")}`}
+                placeholder={language === "ar" ? "اختر أو ابحث عن العضو الأساسي (الباقي)..." : "Select surviving primary member..."}
+                members={members}
+                selectedMemberId={survivingId}
+                onSelectMember={(id) => setSurvivingId(id)}
+                disabledMemberId={duplicateId}
+                badge="primary"
+              />
 
-              <div>
-                <label className="block text-xs font-bold text-[#252922] mb-1.5">
-                  2. {t("merge.duplicateMember")}
-                </label>
-                <select
-                  value={duplicateId}
-                  onChange={(e) => setDuplicateId(e.target.value)}
-                  className="w-full text-xs py-2 px-3 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] font-medium text-[#252922]"
-                >
-                  <option value="">-- {language === "ar" ? "اختر العضو المكرر" : "Select Duplicate"} --</option>
-                  {members.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      {m.fullName} ({m.phone})
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <MemberSearchSelect
+                label={`2. ${t("merge.duplicateMember")}`}
+                placeholder={language === "ar" ? "اختر أو ابحث عن العضو المكرر (للحذف والدمج)..." : "Select duplicate member..."}
+                members={members}
+                selectedMemberId={duplicateId}
+                onSelectMember={(id) => setDuplicateId(id)}
+                disabledMemberId={survivingId}
+                badge="duplicate"
+              />
             </div>
 
             <button

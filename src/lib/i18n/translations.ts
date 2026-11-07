@@ -52,7 +52,7 @@ export const translations = {
       dashboard: "لوحة التحكم",
       myAttendance: "حضوري وسجلاتي",
       calendar: "التقويم السنوي",
-      leaderboard: "لوحة الشرف",
+      leaderboard: "لوحة حضور التسبحة",
       annualLeaderboard: "الترتيب السنوي",
       allTimeLeaderboard: "الترتيب العام",
       rewards: "المكافآت والأوسمة",

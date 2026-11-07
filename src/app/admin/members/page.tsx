@@ -43,6 +43,8 @@ export default function MembersAdminPage() {
   const [copied, setCopied] = useState(false);
   const [pwdLoading, setPwdLoading] = useState(false);
   const [pwdError, setPwdError] = useState<string | null>(null);
+  const [pwdMode, setPwdMode] = useState<"PHONE" | "CUSTOM" | "RANDOM">("PHONE");
+  const [customPwd, setCustomPwd] = useState<string>("");
 
   // Score Adjustment Modal State
   const [scoreTarget, setScoreTarget] = useState<any | null>(null);
@@ -108,6 +110,8 @@ export default function MembersAdminPage() {
         body: JSON.stringify({
           action: "generate-password",
           targetMemberId: pwdTarget.id,
+          passwordType: pwdMode,
+          customPassword: customPwd,
         }),
       });
 
@@ -295,7 +299,7 @@ export default function MembersAdminPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-right ltr:text-left text-xs">
                 <thead>
-                  <tr className="border-b border-[#E4E0D5] bg-[#EFEDE5]/60 text-[11px] font-bold text-[#77786F] uppercase tracking-wider">
+                  <tr className="border-b border-[#E4E0D5] dark:border-[#232740] bg-[#EFEDE5]/60 dark:bg-[#161828] text-[11px] font-bold text-[#77786F] dark:text-[#94A3B8] uppercase tracking-wider">
                     <th className="py-3 px-4">{t("common.name")}</th>
                     <th className="py-3 px-4">{t("common.phone")}</th>
                     <th className="py-3 px-4">{t("common.role")}</th>
@@ -307,13 +311,13 @@ export default function MembersAdminPage() {
                     <th className="py-3 px-4 text-center">{t("common.actions")}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E4E0D5]/70">
+                <tbody className="divide-y divide-[#E4E0D5]/70 dark:divide-[#232740]">
                   {members.map((m) => {
                     const hasAccount = !!m.loginAccount;
 
                     return (
-                      <tr key={m.id} className="hover:bg-[#FAF5EA]/30 transition-colors">
-                        <td className="py-3 px-4 font-bold text-xs text-[#252922]">
+                      <tr key={m.id} className="hover:bg-[#FAF5EA]/30 dark:hover:bg-[#1A1D30] transition-colors">
+                        <td className="py-3 px-4 font-bold text-xs text-[#252922] dark:text-white">
                           <div className="flex items-center gap-2.5">
                             <MemberAvatar
                               memberId={m.id}
@@ -324,7 +328,7 @@ export default function MembersAdminPage() {
                             <span>{m.fullName}</span>
                           </div>
                         </td>
-                        <td className="py-3 px-4 font-mono text-xs text-[#77786F]">
+                        <td className="py-3 px-4 font-mono text-xs text-[#77786F] dark:text-[#94A3B8]">
                           {m.phone}
                         </td>
                         <td className="py-3 px-4">
@@ -494,10 +498,95 @@ export default function MembersAdminPage() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <p className="text-xs text-[#77786F] leading-relaxed">
-                    {t("passwordGen.prompt")}
-                  </p>
-                  <div className="flex justify-end gap-2 pt-2">
+                  <div>
+                    <label className="block text-xs font-bold text-[#252922] mb-1.5">
+                      {language === "ar" ? "اختر طريقة تحديد كلمة المرور:" : "Choose Password Method:"}
+                    </label>
+                    <div className="space-y-2 text-xs">
+                      {/* Option 1: Phone Number */}
+                      <label
+                        className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
+                          pwdMode === "PHONE"
+                            ? "bg-[#FAF5EA] border-[#B58A3A] ring-1 ring-[#B58A3A]/40"
+                            : "bg-[#F7F6F1] border-[#E4E0D5] hover:bg-[#EFEDE5]"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="pwdMode"
+                          checked={pwdMode === "PHONE"}
+                          onChange={() => setPwdMode("PHONE")}
+                          className="mt-0.5 text-[#B58A3A]"
+                        />
+                        <div>
+                          <span className="font-bold text-[#252922] block">
+                            {language === "ar"
+                              ? "رقم الهاتف ككلمة مرور (موصى به لسهولة الدخول)"
+                              : "Phone number as password (Recommended)"}
+                          </span>
+                          <span className="text-[11px] text-[#77786F] font-mono block mt-0.5">
+                            {pwdTarget.phone.startsWith("+20") ? "0" + pwdTarget.phone.slice(3) : pwdTarget.phone}
+                          </span>
+                        </div>
+                      </label>
+
+                      {/* Option 2: Custom Password */}
+                      <label
+                        className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
+                          pwdMode === "CUSTOM"
+                            ? "bg-[#FAF5EA] border-[#B58A3A] ring-1 ring-[#B58A3A]/40"
+                            : "bg-[#F7F6F1] border-[#E4E0D5] hover:bg-[#EFEDE5]"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="pwdMode"
+                          checked={pwdMode === "CUSTOM"}
+                          onChange={() => setPwdMode("CUSTOM")}
+                          className="mt-0.5 text-[#B58A3A]"
+                        />
+                        <div className="flex-1">
+                          <span className="font-bold text-[#252922] block">
+                            {language === "ar" ? "كلمة مرور محددة من اختيارك" : "Set a custom password"}
+                          </span>
+                          {pwdMode === "CUSTOM" && (
+                            <input
+                              type="text"
+                              value={customPwd}
+                              onChange={(e) => setCustomPwd(e.target.value)}
+                              placeholder={language === "ar" ? "اكتب كلمة السر هنا..." : "Type custom password..."}
+                              className="mt-2 w-full text-xs py-1.5 px-2.5 rounded-lg border border-[#E4E0D5] bg-white font-mono text-[#252922]"
+                              autoFocus
+                            />
+                          )}
+                        </div>
+                      </label>
+
+                      {/* Option 3: Strong Random */}
+                      <label
+                        className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
+                          pwdMode === "RANDOM"
+                            ? "bg-[#FAF5EA] border-[#B58A3A] ring-1 ring-[#B58A3A]/40"
+                            : "bg-[#F7F6F1] border-[#E4E0D5] hover:bg-[#EFEDE5]"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="pwdMode"
+                          checked={pwdMode === "RANDOM"}
+                          onChange={() => setPwdMode("RANDOM")}
+                          className="mt-0.5 text-[#B58A3A]"
+                        />
+                        <div>
+                          <span className="font-bold text-[#252922] block">
+                            {language === "ar" ? "توليد كلمة سر عشوائية قوية" : "Generate strong random password"}
+                          </span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end gap-2 pt-2 border-t border-[#E4E0D5]">
                     <button
                       type="button"
                       onClick={() => setPwdTarget(null)}
@@ -507,10 +596,20 @@ export default function MembersAdminPage() {
                     </button>
                     <button
                       onClick={handleGeneratePassword}
-                      disabled={pwdLoading}
-                      className="px-4 py-2 rounded-lg bg-[#B58A3A] hover:bg-[#96702A] text-white text-xs font-bold shadow-xs"
+                      disabled={pwdLoading || (pwdMode === "CUSTOM" && customPwd.trim().length < 4)}
+                      className="px-4 py-2 rounded-lg bg-[#B58A3A] hover:bg-[#96702A] text-white text-xs font-bold shadow-xs cursor-pointer disabled:opacity-50"
                     >
-                      {pwdLoading ? t("common.loading") : t("passwordGen.generateBtn")}
+                      {pwdLoading
+                        ? t("common.loading")
+                        : pwdMode === "PHONE"
+                        ? language === "ar"
+                          ? "تعيين رقم الهاتف ككلمة سر"
+                          : "Set Phone as Password"
+                        : pwdMode === "CUSTOM"
+                        ? language === "ar"
+                          ? "حفظ كلمة السر المحددة"
+                          : "Save Custom Password"
+                        : t("passwordGen.generateBtn")}
                     </button>
                   </div>
                 </div>

@@ -4,69 +4,118 @@ import { recalculateMemberStats } from "../streaks";
 
 export function normalizeToSaturdayMidnight(dateInput: Date | string): Date {
   const d = new Date(dateInput);
-  const utcDay = d.getUTCDay();
-  if (utcDay !== 6) {
-    const diff = (6 - utcDay + 7) % 7;
-    d.setUTCDate(d.getUTCDate() + diff);
-  }
   d.setUTCHours(0, 0, 0, 0);
   return d;
 }
 
 /**
- * Automatically ensures that Saturday sessions exist for the entire year
- * (16 weeks in the past and 24 weeks in the future).
- * Every Saturday inherently has a Tasbeha unless explicitly marked OFF.
+ * Automatically ensures that Saturday sessions exist according to church schedule:
+ * 1. The last completed Saturday
+ * 2. Today's Saturday (only if today is Saturday, and becomes ACTIVE at 10 AM)
+ * 3. The next upcoming Saturday
+ * Also automatically cleans up any distant future scheduled sessions (> next Saturday).
  */
 export async function ensureSaturdaySessionsExist() {
   const now = new Date();
-  const currentSaturday = normalizeToSaturdayMidnight(now);
+  // Egypt Cairo time (+2 or +3)
+  const cairoStr = now.toLocaleString("en-US", { timeZone: "Africa/Cairo" });
+  const cairoNow = new Date(cairoStr);
+  const cairoDay = cairoNow.getDay(); // 0 = Sun, 6 = Sat
+  const cairoHour = cairoNow.getHours();
 
-  // Generate 16 weeks past to 24 weeks future
-  const saturdayDates: Date[] = [];
-  for (let offset = -16; offset <= 24; offset++) {
-    const sat = new Date(currentSaturday);
-    sat.setUTCDate(sat.getUTCDate() + offset * 7);
-    sat.setUTCHours(0, 0, 0, 0);
-    saturdayDates.push(sat);
+  // Find next Saturday
+  let daysUntilNextSat = (6 - cairoDay + 7) % 7;
+  if (daysUntilNextSat === 0) {
+    daysUntilNextSat = 7; // If today is Saturday, next Saturday is 7 days ahead
+  }
+  const nextSat = new Date(cairoNow);
+  nextSat.setDate(nextSat.getDate() + daysUntilNextSat);
+  nextSat.setUTCHours(0, 0, 0, 0);
+
+  // 1. Clean up excessive future scheduled sessions without attendances (> next Saturday)
+  try {
+    await prisma.saturdaySession.deleteMany({
+      where: {
+        date: { gt: nextSat },
+        attendances: { none: {} },
+      },
+    });
+  } catch {}
+
+  // 2. Identify the 2 or 3 Saturdays
+  const lastSat = new Date(cairoNow);
+  let todaySat: Date | null = null;
+
+  if (cairoDay === 6) {
+    // Today is Saturday
+    todaySat = new Date(cairoNow);
+    todaySat.setUTCHours(0, 0, 0, 0);
+
+    lastSat.setDate(lastSat.getDate() - 7);
+    lastSat.setUTCHours(0, 0, 0, 0);
+  } else {
+    // Today is NOT Saturday
+    const daysSinceLastSat = (cairoDay + 1) % 7;
+    lastSat.setDate(lastSat.getDate() - daysSinceLastSat);
+    lastSat.setUTCHours(0, 0, 0, 0);
   }
 
-  // Find existing sessions in this range
-  const existing = await prisma.saturdaySession.findMany({
-    where: {
-      date: { in: saturdayDates },
-    },
-    select: { date: true },
-  });
-
-  const existingDatesSet = new Set(existing.map((e) => e.date.toISOString()));
-
-  const toCreate: Array<{ date: Date; title: string; status: string }> = [];
-
-  for (const satDate of saturdayDates) {
-    if (!existingDatesSet.has(satDate.toISOString())) {
-      const isCurrent = satDate.toISOString() === currentSaturday.toISOString();
-      const isPast = satDate < currentSaturday;
-
-      toCreate.push({
-        date: satDate,
-        title: `تسبحة سبت ${satDate.toISOString().split("T")[0]}`,
-        status: isCurrent ? "ACTIVE" : isPast ? "COMPLETED" : "SCHEDULED",
+  // Ensure last Saturday exists
+  try {
+    const existingLast = await prisma.saturdaySession.findUnique({
+      where: { date: lastSat },
+    });
+    if (!existingLast) {
+      await prisma.saturdaySession.create({
+        data: {
+          date: lastSat,
+          title: `تسبحة سبت ${lastSat.toISOString().split("T")[0]}`,
+          status: "COMPLETED",
+        },
       });
     }
+  } catch {}
+
+  // If today is Saturday, ensure today's session exists and is ACTIVE if >= 10 am
+  if (todaySat) {
+    try {
+      const existingToday = await prisma.saturdaySession.findUnique({
+        where: { date: todaySat },
+      });
+      const isPast10Am = cairoHour >= 10;
+      if (!existingToday) {
+        await prisma.saturdaySession.create({
+          data: {
+            date: todaySat,
+            title: `تسبحة سبت ${todaySat.toISOString().split("T")[0]}`,
+            status: isPast10Am ? "ACTIVE" : "SCHEDULED",
+            qrActive: isPast10Am,
+          },
+        });
+      } else if (isPast10Am && existingToday.status === "SCHEDULED") {
+        await prisma.saturdaySession.update({
+          where: { id: existingToday.id },
+          data: { status: "ACTIVE", qrActive: true },
+        });
+      }
+    } catch {}
   }
 
-  if (toCreate.length > 0) {
-    for (const sessionData of toCreate) {
-      try {
-        await prisma.saturdaySession.create({
-          data: sessionData,
-        });
-      } catch {
-        // Ignore if already created concurrently
-      }
+  // Ensure next Saturday exists
+  try {
+    const existingNext = await prisma.saturdaySession.findUnique({
+      where: { date: nextSat },
+    });
+    if (!existingNext) {
+      await prisma.saturdaySession.create({
+        data: {
+          date: nextSat,
+          title: `تسبحة سبت ${nextSat.toISOString().split("T")[0]}`,
+          status: "SCHEDULED",
+        },
+      });
     }
-  }
+  } catch {}
 }
 
 export async function createSaturdaySession(params: {
@@ -76,20 +125,20 @@ export async function createSaturdaySession(params: {
   createdByName?: string;
   createdByRole?: string;
 }) {
-  const satDate = normalizeToSaturdayMidnight(params.date);
+  const sessionDate = normalizeToSaturdayMidnight(params.date);
 
   const existing = await prisma.saturdaySession.findUnique({
-    where: { date: satDate },
+    where: { date: sessionDate },
   });
 
   if (existing) {
-    throw new Error("SESSION_ALREADY_EXISTS_FOR_SATURDAY");
+    throw new Error("SESSION_ALREADY_EXISTS_FOR_DATE");
   }
 
   const session = await prisma.saturdaySession.create({
     data: {
-      date: satDate,
-      title: params.title || `تسبحة سبت ${satDate.toISOString().split("T")[0]}`,
+      date: sessionDate,
+      title: params.title || `تسبحة ${sessionDate.toISOString().split("T")[0]}`,
       status: "SCHEDULED",
       createdById: params.createdById,
     },
@@ -102,7 +151,7 @@ export async function createSaturdaySession(params: {
     action: "CREATE_SESSION",
     targetEntity: "SaturdaySession",
     targetId: session.id,
-    newValue: { date: satDate, title: session.title },
+    newValue: { date: sessionDate, title: session.title },
   });
 
   return session;

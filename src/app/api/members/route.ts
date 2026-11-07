@@ -74,7 +74,9 @@ export async function POST(req: Request) {
         user.memberId,
         user.role,
         user.fullName,
-        body.targetMemberId
+        body.targetMemberId,
+        body.passwordType,
+        body.customPassword
       );
       return NextResponse.json(result);
     }

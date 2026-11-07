@@ -226,12 +226,59 @@ html.light main .border-\[\#2B304C\] {
   border-color: #E4E0D5 !important;
 }
 
-html.light main .text-white {
+/* Specific light mode typography: headings and text that were white become dark forest */
+html.light main h1.text-white,
+html.light main h2.text-white,
+html.light main h3.text-white,
+html.light main h4.text-white,
+html.light main p.text-white {
   color: #233D30 !important;
 }
 
 html.light main .text-\[\#94A3B8\] {
   color: #77786F !important;
+}
+
+/* CRITICAL FIX: Ensure buttons with dark backgrounds KEEP THEIR WHITE TEXT in light mode */
+html.light .bg-\[\#233D30\],
+html.light .bg-\[\#233D30\] *,
+html.light button.bg-\[\#233D30\],
+html.light button.bg-\[\#233D30\] *,
+html.light a.bg-\[\#233D30\],
+html.light a.bg-\[\#233D30\] *,
+html.light [class*="bg-[#233D30]"],
+html.light [class*="bg-[#233D30]"] *,
+html.light [class*="hover:bg-[#192D24]"],
+html.light [class*="hover:bg-[#192D24]"] * {
+  color: #FFFFFF !important;
+}
+
+html.light button.bg-\[\#F59E0B\],
+html.light button.bg-\[\#F59E0B\] *,
+html.light a.bg-\[\#F59E0B\],
+html.light a.bg-\[\#F59E0B\] * {
+  color: #0B0C14 !important;
+}
+
+/* CRITICAL FIX: Dark mode table headers and ivory rows */
+html.dark tr.border-b.border-\[\#E4E0D5\],
+html.dark tr.border-\[\#E4E0D5\],
+html.dark tr.border-b.border-\[\#EFEDE5\] {
+  border-color: #232740 !important;
+}
+
+html.dark thead tr,
+html.dark tr.bg-\[\#EFEDE5\]\/60,
+html.dark tr.bg-\[\#EFEDE5\]\/80,
+html.dark tr.bg-\[\#EFEDE5\],
+html.dark .bg-\[\#EFEDE5\]\/60 {
+  background-color: #161828 !important;
+  color: #94A3B8 !important;
+}
+
+html.dark th,
+html.dark thead th {
+  color: #94A3B8 !important;
 }
 
 /* Subtle focus ring */

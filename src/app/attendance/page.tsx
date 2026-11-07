@@ -29,6 +29,7 @@ import {
 import QRCode from "qrcode";
 import { CameraQRScanner } from "@/components/CameraQRScanner";
 import { MemberAvatar } from "@/components/MemberAvatar";
+import { SessionSelect } from "@/components/SessionSelect";
 
 export default function AttendancePage() {
   const { language, t } = useLanguage();
@@ -350,20 +351,15 @@ export default function AttendancePage() {
               <span className="text-[10px] font-bold text-[#77786F] dark:text-[#94A3B8] uppercase tracking-wider block mb-1">
                 {t("attendance.saturdaySession")}
               </span>
-              <div className="relative inline-block w-full sm:w-auto">
-                <select
-                  value={selectedSessionId}
-                  onChange={(e) => setSelectedSessionId(e.target.value)}
-                  className="appearance-none font-bold text-xs sm:text-sm text-[#233D30] dark:text-white bg-[#F7F6F1] dark:bg-[#161828] border border-[#E4E0D5] dark:border-[#2B304C] rounded-xl py-2 px-3 rtl:pl-9 ltr:pr-9 hover:border-[#B58A3A] dark:hover:border-[#F59E0B] focus:outline-none focus:ring-2 focus:ring-[#F59E0B]/30 cursor-pointer transition-all shadow-xs w-full sm:w-auto"
-                >
-                  {sessions.map((s) => (
-                    <option key={s.id} value={s.id} className="bg-white dark:bg-[#161828] text-[#252922] dark:text-white py-1">
-                      {s.title || new Date(s.date).toISOString().split("T")[0]} ({t(`statuses.${s.status}`)})
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="w-4 h-4 text-[#77786F] dark:text-[#94A3B8] absolute top-1/2 -translate-y-1/2 rtl:left-2.5 ltr:right-2.5 pointer-events-none" />
-              </div>
+              <SessionSelect
+                sessions={sessions}
+                selectedSessionId={selectedSessionId}
+                onSelectSession={(id) => setSelectedSessionId(id)}
+                onPraiseAdded={(newSession) => {
+                  fetchSessions();
+                  setSelectedSessionId(newSession.id);
+                }}
+              />
             </div>
           </div>
 
