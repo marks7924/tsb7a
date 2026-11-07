@@ -18,6 +18,7 @@ import {
   Search,
   Sparkles,
   Check,
+  Trash2,
 } from "lucide-react";
 
 export default function SessionsPage() {
@@ -42,6 +43,10 @@ export default function SessionsPage() {
   const [showOffModal, setShowOffModal] = useState(false);
   const [targetSessionId, setTargetSessionId] = useState<string>("");
   const [offReason, setOffReason] = useState("");
+
+  // Delete Session from Archive Modal
+  const [deleteTargetSession, setDeleteTargetSession] = useState<{ id: string; title: string; count: number } | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -128,6 +133,24 @@ export default function SessionsPage() {
     } catch { }
   };
 
+  const handleDeleteSession = async () => {
+    if (!deleteTargetSession) return;
+    setDeleteLoading(true);
+    try {
+      await fetch("/api/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "delete",
+          sessionId: deleteTargetSession.id,
+        }),
+      });
+      setDeleteTargetSession(null);
+      fetchSessions();
+    } catch { }
+    setDeleteLoading(false);
+  };
+
   // Partition sessions into:
   // 1- Current active Saturdays: Last Saturday, Today (only if Saturday), and Next Saturday
   // 2- Archive: all other past praises
@@ -205,10 +228,21 @@ export default function SessionsPage() {
     });
   }, [archiveSessions, archiveSearch]);
 
-  const renderSessionCard = (s: any, badge?: { badgeAr: string; badgeEn: string; type: string }) => {
+  const renderSessionCard = (
+    s: any,
+    badge?: { badgeAr: string; badgeEn: string; type: string },
+    isArchive: boolean = false
+  ) => {
     const dt = new Date(s.date);
     const isOff = s.status === "OFF";
     const isActive = s.status === "ACTIVE";
+
+    // Clean display title for any leftover test data
+    let displayTitle = s.title;
+    if (!displayTitle || displayTitle.startsWith("Test Sat") || displayTitle.includes("T00:00:00")) {
+      const datePart = dt.toISOString().split("T")[0];
+      displayTitle = language === "ar" ? `تسبحة سبت ${datePart}` : `Saturday Praise ${datePart}`;
+    }
 
     return (
       <div
@@ -246,21 +280,40 @@ export default function SessionsPage() {
             )}
           </div>
 
-          <span
-            className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md ${
-              isOff
-                ? "bg-[#B58A3A]/20 text-[#B58A3A] dark:text-[#F59E0B]"
-                : isActive
-                ? "bg-[#EEF5F1] text-[#233D30] dark:bg-[#10B981]/20 dark:text-[#10B981]"
-                : "bg-[#EFEDE5] dark:bg-[#1E2238] text-[#77786F] dark:text-[#94A3B8]"
-            }`}
-          >
-            {t(`statuses.${s.status}`)}
-          </span>
+          <div className="flex items-center gap-1.5">
+            <span
+              className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md ${
+                isOff
+                  ? "bg-[#B58A3A]/20 text-[#B58A3A] dark:text-[#F59E0B]"
+                  : isActive
+                  ? "bg-[#EEF5F1] text-[#233D30] dark:bg-[#10B981]/20 dark:text-[#10B981]"
+                  : "bg-[#EFEDE5] dark:bg-[#1E2238] text-[#77786F] dark:text-[#94A3B8]"
+              }`}
+            >
+              {t(`statuses.${s.status}`)}
+            </span>
+
+            {isArchive && (
+              <button
+                type="button"
+                onClick={() =>
+                  setDeleteTargetSession({
+                    id: s.id,
+                    title: displayTitle,
+                    count: (s.presentCount || 0) + (s.absentCount || 0),
+                  })
+                }
+                title={language === "ar" ? "حذف التسبحة من الأرشيف" : "Delete praise from archive"}
+                className="p-1 rounded-md text-[#8C2929] hover:bg-[#FAF0F0] dark:text-[#EF4444] dark:hover:bg-[#EF4444]/20 transition-colors cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
         </div>
 
         <h3 className="font-bold text-sm text-[#252922] dark:text-white mt-2">
-          {s.title || (language === "ar" ? "تسبحة نصف الليل" : "Saturday Praise")}
+          {displayTitle}
         </h3>
 
         {isOff && (
@@ -427,7 +480,7 @@ export default function SessionsPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredArchive.map((s) => renderSessionCard(s))}
+                {filteredArchive.map((s) => renderSessionCard(s, undefined, true))}
               </div>
             )}
           </div>
@@ -544,6 +597,51 @@ export default function SessionsPage() {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+        {/* Delete Session Confirmation Modal */}
+        {deleteTargetSession && (
+          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="max-w-md w-full bg-white dark:bg-[#121422] rounded-2xl shadow-xl border border-[#E4E0D5] dark:border-[#262A42] p-6 space-y-4 text-[#252922] dark:text-white animate-in fade-in zoom-in-95 duration-150">
+              <div className="flex items-center gap-2 text-[#8C2929] dark:text-[#EF4444]">
+                <div className="w-8 h-8 rounded-lg bg-[#FAF0F0] dark:bg-[#EF4444]/20 flex items-center justify-center">
+                  <Trash2 className="w-4 h-4" />
+                </div>
+                <h3 className="text-sm font-bold">
+                  {language === "ar" ? "تأكيد حذف التسبحة من الأرشيف" : "Confirm Delete Praise Session"}
+                </h3>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-[#FAF0F0]/60 dark:bg-[#EF4444]/10 border border-[#8C2929]/20 dark:border-[#EF4444]/30 space-y-1.5 text-xs">
+                <p className="font-bold text-[#8C2929] dark:text-[#EF4444]">
+                  {deleteTargetSession.title}
+                </p>
+                <p className="text-[#77786F] dark:text-[#94A3B8]">
+                  {language === "ar"
+                    ? `تحذير: سيتم حذف هذه التسبحة وسجلات الحضور التابعة لها (${deleteTargetSession.count} تسجيل) نهائياً من قاعدة البيانات.`
+                    : `Warning: This praise session and all its attendance records (${deleteTargetSession.count} records) will be permanently deleted.`}
+                </p>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  disabled={deleteLoading}
+                  onClick={() => setDeleteTargetSession(null)}
+                  className="px-4 py-2 rounded-xl border border-[#E4E0D5] dark:border-[#262A42] text-xs font-semibold text-[#77786F] dark:text-[#94A3B8] hover:bg-[#F7F6F1] dark:hover:bg-[#161828] cursor-pointer"
+                >
+                  {t("common.cancel")}
+                </button>
+                <button
+                  type="button"
+                  disabled={deleteLoading}
+                  onClick={handleDeleteSession}
+                  className="px-4 py-2 rounded-xl bg-[#8C2929] dark:bg-[#EF4444] hover:bg-[#722020] text-white text-xs font-bold shadow-xs cursor-pointer disabled:opacity-50"
+                >
+                  {deleteLoading ? t("common.loading") : (language === "ar" ? "حذف نهائي" : "Delete Permanently")}
+                </button>
+              </div>
             </div>
           </div>
         )}

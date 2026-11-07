@@ -22,7 +22,7 @@ export default function RewardsAdminPage() {
       const res = await fetch("/api/members");
       const json = await res.json();
       setMembers(json.members || []);
-    } catch {}
+    } catch { }
     setLoading(false);
   };
 
@@ -37,7 +37,7 @@ export default function RewardsAdminPage() {
         }),
       });
       fetchData();
-    } catch {}
+    } catch { }
   };
 
   const allRewards = members.flatMap((m) =>
@@ -134,11 +134,10 @@ export default function RewardsAdminPage() {
                         </td>
                         <td className="py-3 px-4 text-center">
                           <span
-                            className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md ${
-                              isDelivered
+                            className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md ${isDelivered
                                 ? "bg-[#EEF5F1] text-[#233D30] border border-[#233D30]/20"
                                 : "bg-[#FAF5EA] text-[#B58A3A] border border-[#B58A3A]/30"
-                            }`}
+                              }`}
                           >
                             {t(`statuses.${r.status}`)}
                           </span>

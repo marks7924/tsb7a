@@ -269,9 +269,9 @@ export default function MemberDashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#0B0C14] text-white">
+      <div className="min-h-screen flex flex-col bg-[#F7F6F1] dark:bg-[#0B0C14] text-[#252922] dark:text-white">
         <Navbar />
-        <div className="flex-1 flex items-center justify-center p-8 text-xs text-[#94A3B8]">
+        <div className="flex-1 flex items-center justify-center p-8 text-xs text-[#77786F] dark:text-[#94A3B8]">
           {t("common.loading")}
         </div>
       </div>
@@ -280,9 +280,9 @@ export default function MemberDashboardPage() {
 
   if (!data || !data.member) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#0B0C14] text-white">
+      <div className="min-h-screen flex flex-col bg-[#F7F6F1] dark:bg-[#0B0C14] text-[#252922] dark:text-white">
         <Navbar />
-        <div className="flex-1 flex items-center justify-center p-8 text-center text-xs text-[#94A3B8]">
+        <div className="flex-1 flex items-center justify-center p-8 text-center text-xs text-[#77786F] dark:text-[#94A3B8]">
           {language === "ar"
             ? "يرجى تسجيل الدخول لعرض لوحة تحكم حسابك"
             : "Please log in to view your dashboard"}
@@ -312,7 +312,7 @@ export default function MemberDashboardPage() {
   const nextRewardProgress = stats?.nextRewardProgress || 0;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0B0C14] text-white selection:bg-[#10B981]/30 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#F7F6F1] dark:bg-[#0B0C14] text-[#252922] dark:text-white selection:bg-[#10B981]/30 selection:text-white">
       <Navbar />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -857,25 +857,25 @@ export default function MemberDashboardPage() {
       {/* Password Change Dialog */}
       {showPasswordModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-[#E4E0D5] p-6 max-w-sm w-full shadow-lg space-y-4">
-            <h3 className="font-bold text-base text-[#252922]">
+          <div className="bg-white dark:bg-[#121422] rounded-2xl border border-[#E4E0D5] dark:border-[#262A42] p-6 max-w-sm w-full shadow-2xl space-y-4">
+            <h3 className="font-bold text-base text-[#252922] dark:text-white">
               {t("auth.changePassword")}
             </h3>
 
             {pwdMsg && (
               <div
-                className={`p-3 rounded-lg text-xs font-semibold ${pwdMsg.error
-                  ? "bg-[#FAF0F0] text-[#8C2929]"
-                  : "bg-[#EEF5F1] text-[#233D30]"
+                className={`p-3 rounded-xl text-xs font-semibold ${pwdMsg.error
+                  ? "bg-[#FAF0F0] dark:bg-[#EF4444]/20 text-[#8C2929] dark:text-[#EF4444]"
+                  : "bg-[#EEF5F1] dark:bg-[#10B981]/20 text-[#233D30] dark:text-[#10B981]"
                   }`}
               >
                 {pwdMsg.text}
               </div>
             )}
 
-            <form onSubmit={handleChangePassword} className="space-y-3">
+            <form onSubmit={handleChangePassword} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-semibold text-[#252922] mb-1">
+                <label className="block text-xs font-semibold text-[#252922] dark:text-[#E2E8F0] mb-1.5">
                   {language === "ar" ? "كلمة المرور الحالية" : "Current Password"}
                 </label>
                 <input
@@ -883,13 +883,13 @@ export default function MemberDashboardPage() {
                   required
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full text-xs p-2.5 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] focus:bg-white focus:outline-hidden"
+                  className="w-full text-xs p-3 rounded-xl border border-[#E4E0D5] dark:border-[#2B304C] bg-[#F7F6F1] dark:bg-[#161828] text-[#252922] dark:text-white placeholder-[#77786F] dark:placeholder-[#64748B] focus:bg-white dark:focus:bg-[#1A1D30] focus:ring-2 focus:ring-[#B58A3A]/40 focus:outline-hidden transition-all shadow-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#252922] mb-1">
-                  {language === "ar" ? "كلمة المرور الجديدة" : "New Password"}
+                <label className="block text-xs font-semibold text-[#252922] dark:text-[#E2E8F0] mb-1.5">
+                  {language === "ar" ? "كلمة المرور الجديدة (٨ أحرف على الأقل)" : "New Password (min 8 chars)"}
                 </label>
                 <input
                   type="password"
@@ -897,7 +897,7 @@ export default function MemberDashboardPage() {
                   minLength={8}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full text-xs p-2.5 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] focus:bg-white focus:outline-hidden"
+                  className="w-full text-xs p-3 rounded-xl border border-[#E4E0D5] dark:border-[#2B304C] bg-[#F7F6F1] dark:bg-[#161828] text-[#252922] dark:text-white placeholder-[#77786F] dark:placeholder-[#64748B] focus:bg-white dark:focus:bg-[#1A1D30] focus:ring-2 focus:ring-[#B58A3A]/40 focus:outline-hidden transition-all shadow-xs"
                 />
               </div>
 
@@ -905,13 +905,13 @@ export default function MemberDashboardPage() {
                 <button
                   type="button"
                   onClick={() => setShowPasswordModal(false)}
-                  className="px-3.5 py-2 text-xs font-semibold text-[#77786F] hover:bg-[#EFEDE5] rounded-lg transition-colors cursor-pointer"
+                  className="px-3.5 py-2 text-xs font-semibold text-[#77786F] dark:text-[#94A3B8] hover:bg-[#EFEDE5] dark:hover:bg-[#1E2238] rounded-xl transition-colors cursor-pointer"
                 >
                   {t("common.cancel")}
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-xs font-bold bg-[#233D30] text-white rounded-lg hover:bg-[#192D24] transition-colors cursor-pointer shadow-xs"
+                  className="px-4 py-2 text-xs font-bold bg-[#233D30] text-white rounded-xl hover:bg-[#192D24] transition-colors cursor-pointer shadow-xs"
                 >
                   {t("common.save")}
                 </button>
@@ -924,12 +924,12 @@ export default function MemberDashboardPage() {
       {/* Edit Full Name Dialog */}
       {showEditNameModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl border border-[#E4E0D5] p-6 max-w-sm w-full shadow-lg space-y-4">
+          <div className="bg-white dark:bg-[#121422] rounded-2xl border border-[#E4E0D5] dark:border-[#262A42] p-6 max-w-sm w-full shadow-2xl space-y-4">
             <div>
-              <h3 className="font-bold text-base text-[#252922]">
+              <h3 className="font-bold text-base text-[#252922] dark:text-white">
                 {language === "ar" ? "تعديل الاسم بالكامل" : "Edit Full Name"}
               </h3>
-              <p className="text-xs text-[#77786F] mt-1">
+              <p className="text-xs text-[#77786F] dark:text-[#94A3B8] mt-1">
                 {language === "ar"
                   ? "سيتم تطبيق هذا التعديل فوراً على لوحة الشرف وكشوف الحضور."
                   : "Your updated name will be applied immediately across the leaderboard and attendance roster."}
@@ -937,14 +937,14 @@ export default function MemberDashboardPage() {
             </div>
 
             {editNameError && (
-              <div className="p-3 rounded-lg text-xs font-semibold bg-[#FAF0F0] text-[#8C2929]">
+              <div className="p-3 rounded-xl text-xs font-semibold bg-[#FAF0F0] dark:bg-[#EF4444]/20 text-[#8C2929] dark:text-[#EF4444]">
                 {editNameError}
               </div>
             )}
 
-            <form onSubmit={handleSaveName} className="space-y-3">
+            <form onSubmit={handleSaveName} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-semibold text-[#252922] mb-1">
+                <label className="block text-xs font-semibold text-[#252922] dark:text-[#E2E8F0] mb-1.5">
                   {language === "ar" ? "الاسم ثلاثي أو رباعي" : "Full Name"}
                 </label>
                 <input
@@ -953,7 +953,7 @@ export default function MemberDashboardPage() {
                   value={newFullName}
                   onChange={(e) => setNewFullName(e.target.value)}
                   placeholder={language === "ar" ? "أدخل اسمك بالكامل..." : "Enter your full name..."}
-                  className="w-full text-xs p-2.5 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] focus:bg-white focus:outline-hidden"
+                  className="w-full text-xs p-3 rounded-xl border border-[#E4E0D5] dark:border-[#2B304C] bg-[#F7F6F1] dark:bg-[#161828] text-[#252922] dark:text-white placeholder-[#77786F] dark:placeholder-[#64748B] focus:bg-white dark:focus:bg-[#1A1D30] focus:ring-2 focus:ring-[#B58A3A]/40 focus:outline-hidden transition-all shadow-xs"
                 />
               </div>
 
@@ -961,14 +961,14 @@ export default function MemberDashboardPage() {
                 <button
                   type="button"
                   onClick={() => setShowEditNameModal(false)}
-                  className="px-3.5 py-2 text-xs font-semibold text-[#77786F] hover:bg-[#EFEDE5] rounded-lg transition-colors cursor-pointer"
+                  className="px-3.5 py-2 text-xs font-semibold text-[#77786F] dark:text-[#94A3B8] hover:bg-[#EFEDE5] dark:hover:bg-[#1E2238] rounded-xl transition-colors cursor-pointer"
                 >
                   {t("common.cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={editNameLoading || !newFullName.trim()}
-                  className="px-4 py-2 text-xs font-bold bg-[#233D30] text-white rounded-lg hover:bg-[#192D24] transition-colors cursor-pointer shadow-xs disabled:opacity-50"
+                  className="px-4 py-2 text-xs font-bold bg-[#233D30] text-white rounded-xl hover:bg-[#192D24] transition-colors cursor-pointer shadow-xs disabled:opacity-50"
                 >
                   {editNameLoading ? t("common.loading") : t("common.save")}
                 </button>

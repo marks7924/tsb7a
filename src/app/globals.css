@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
+
 @theme {
   --color-ivory: #F7F6F1;
   --color-ivory-subtle: #EFEDE5;
@@ -35,11 +37,19 @@
 }
 
 body {
-  background-color: #0B0C14;
-  color: #F8FAFC;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   min-height: 100vh;
   letter-spacing: -0.01em;
+}
+
+html.dark body {
+  background-color: #0B0C14;
+  color: #F8FAFC;
+}
+
+html.light body {
+  background-color: #F7F6F1;
+  color: #252922;
 }
 
 /* RTL Typography Adjustment */
@@ -182,7 +192,7 @@ html.light body {
 }
 
 html.light header {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: rgba(255, 255, 255, 0.96) !important;
   border-color: #E4E0D5 !important;
 }
 
@@ -206,15 +216,23 @@ html.light header .border-\[\#373A56\] {
   border-color: #E4E0D5 !important;
 }
 
+/* Light mode container backgrounds */
+html.light .bg-\[\#0B0C14\],
 html.light main .bg-\[\#0B0C14\],
+html.light .bg-\[\#0E101C\],
 html.light main .bg-\[\#0E101C\],
+html.light .bg-\[\#0E101C\]\/90,
 html.light main .bg-\[\#0E101C\]\/90 {
-  background-color: #FFFFFF !important;
+  background-color: #F7F6F1 !important;
 }
 
+html.light .bg-\[\#121422\],
 html.light main .bg-\[\#121422\],
+html.light .bg-\[\#141728\],
 html.light main .bg-\[\#141728\],
+html.light .bg-\[\#161828\],
 html.light main .bg-\[\#161828\],
+html.light .bg-\[\#16182C\],
 html.light main .bg-\[\#16182C\] {
   background-color: #FAF5EA !important;
 }
@@ -226,7 +244,7 @@ html.light main .border-\[\#2B304C\] {
   border-color: #E4E0D5 !important;
 }
 
-/* Specific light mode typography: headings and text that were white become dark forest */
+/* Specific light mode typography */
 html.light main h1.text-white,
 html.light main h2.text-white,
 html.light main h3.text-white,
@@ -239,17 +257,34 @@ html.light main .text-\[\#94A3B8\] {
   color: #77786F !important;
 }
 
-/* CRITICAL FIX: Ensure buttons with dark backgrounds KEEP THEIR WHITE TEXT in light mode */
-html.light .bg-\[\#233D30\],
-html.light .bg-\[\#233D30\] *,
-html.light button.bg-\[\#233D30\],
-html.light button.bg-\[\#233D30\] *,
-html.light a.bg-\[\#233D30\],
-html.light a.bg-\[\#233D30\] *,
-html.light [class*="bg-[#233D30]"],
-html.light [class*="bg-[#233D30]"] *,
-html.light [class*="hover:bg-[#192D24]"],
-html.light [class*="hover:bg-[#192D24]"] * {
+/* Form controls in light mode */
+html.light input,
+html.light select,
+html.light textarea {
+  background-color: #F7F6F1 !important;
+  color: #252922 !important;
+  border-color: #E4E0D5 !important;
+}
+
+html.light input:focus,
+html.light select:focus,
+html.light textarea:focus {
+  background-color: #FFFFFF !important;
+  border-color: #B58A3A !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #77786F !important;
+}
+
+/* Primary Green Buttons ALWAYS keep white text */
+.bg-\[\#233D30\],
+button.bg-\[\#233D30\],
+a.bg-\[\#233D30\],
+.bg-\[\#233D30\] > *,
+button.bg-\[\#233D30\] > *,
+a.bg-\[\#233D30\] > * {
   color: #FFFFFF !important;
 }
 

@@ -5,6 +5,7 @@ import {
   createSaturdaySession,
   markSaturdayAsOff,
   reverseSaturdayOff,
+  deleteSaturdaySession,
   ensureSaturdaySessionsExist,
 } from "@/lib/services/attendanceService";
 
@@ -71,6 +72,16 @@ export async function POST(req: Request) {
         actorRole: sessionUser.role,
       });
       return NextResponse.json({ success: true, session: updated });
+    }
+
+    if (body.action === "delete") {
+      const deleted = await deleteSaturdaySession({
+        sessionId: body.sessionId,
+        actorId: sessionUser.memberId,
+        actorName: sessionUser.fullName,
+        actorRole: sessionUser.role,
+      });
+      return NextResponse.json({ success: true, session: deleted });
     }
 
     // Create session

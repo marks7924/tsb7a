@@ -124,19 +124,19 @@ export function Navbar() {
   ].some((prefix) => pathname.startsWith(prefix));
 
   return (
-    <header className="sticky top-0 z-40 bg-[#0B0C14]/90 backdrop-blur-md border-b border-[#1E2132]">
+    <header className="sticky top-0 z-40 bg-[#FAF5EA]/95 dark:bg-[#0B0C14]/90 backdrop-blur-md border-b border-[#E4E0D5] dark:border-[#1E2132]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-[68px]">
           {/* Church Identity & Brand */}
           <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink min-w-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#141726] text-[#F59E0B] flex items-center justify-center border border-[#F59E0B]/40 shadow-xs transition-transform group-hover:scale-105 shrink-0">
-              <CopticCross className="w-4 h-4 sm:w-5 sm:h-5" color="#F59E0B" />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#FAF0F0]/50 dark:bg-[#141726] text-[#B58A3A] dark:text-[#F59E0B] flex items-center justify-center border border-[#B58A3A]/30 dark:border-[#F59E0B]/40 shadow-xs transition-transform group-hover:scale-105 shrink-0">
+              <CopticCross className="w-4 h-4 sm:w-5 sm:h-5" color="#B58A3A" />
             </div>
-            <div className="flex flex-col min-w-0">
-              <span className="text-xs sm:text-base font-bold text-white tracking-tight leading-tight truncate">
-                {t("app.churchName")}
+            <div className="flex flex-col min-w-0 max-w-[150px] sm:max-w-[220px] md:max-w-[260px] xl:max-w-none">
+              <span className="text-xs sm:text-sm font-bold text-[#252922] dark:text-white tracking-tight leading-tight truncate">
+                {language === "en" ? "St. Philopateer (Abu Sefein)" : t("app.churchName")}
               </span>
-              <span className="text-[10px] sm:text-[11px] text-[#94A3B8] font-medium leading-none mt-0.5 truncate">
+              <span className="text-[10px] sm:text-[11px] text-[#77786F] dark:text-[#94A3B8] font-medium leading-none mt-0.5 truncate">
                 {t("app.title")}
               </span>
             </div>
@@ -147,9 +147,9 @@ export function Navbar() {
             {/* Leaderboard */}
             <Link
               href="/"
-              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${pathname === "/"
-                ? "bg-[#1E2238] text-white shadow-xs border border-[#373A56]"
-                : "text-[#94A3B8] hover:text-white hover:bg-[#141726]"
+              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${pathname === "/"
+                ? "bg-[#233D30] text-white dark:bg-[#1E2238] dark:text-white shadow-xs border border-[#233D30] dark:border-[#373A56]"
+                : "text-[#77786F] hover:text-[#233D30] hover:bg-[#EFEDE5] dark:text-[#94A3B8] dark:hover:text-white dark:hover:bg-[#141726]"
                 }`}
             >
               <Trophy className="w-3.5 h-3.5 text-[#F59E0B]" />
@@ -160,9 +160,9 @@ export function Navbar() {
             {user && (
               <Link
                 href="/dashboard"
-                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${pathname === "/dashboard"
-                  ? "bg-[#1E2238] text-white shadow-xs border border-[#373A56]"
-                  : "text-[#94A3B8] hover:text-white hover:bg-[#141726]"
+                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${pathname === "/dashboard"
+                  ? "bg-[#233D30] text-white dark:bg-[#1E2238] dark:text-white shadow-xs border border-[#233D30] dark:border-[#373A56]"
+                  : "text-[#77786F] hover:text-[#233D30] hover:bg-[#EFEDE5] dark:text-[#94A3B8] dark:hover:text-white dark:hover:bg-[#141726]"
                   }`}
               >
                 <LayoutDashboard className="w-3.5 h-3.5 text-[#10B981]" />
@@ -174,13 +174,13 @@ export function Navbar() {
             {isModeratorOrAbove && (
               <Link
                 href="/attendance"
-                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${pathname === "/attendance"
-                  ? "bg-[#1E2238] text-white shadow-xs border border-[#373A56]"
-                  : "text-[#94A3B8] hover:text-white hover:bg-[#141726]"
+                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${pathname === "/attendance"
+                  ? "bg-[#233D30] text-white dark:bg-[#1E2238] dark:text-white shadow-xs border border-[#233D30] dark:border-[#373A56]"
+                  : "text-[#77786F] hover:text-[#233D30] hover:bg-[#EFEDE5] dark:text-[#94A3B8] dark:hover:text-white dark:hover:bg-[#141726]"
                   }`}
               >
                 <CalendarCheck className="w-3.5 h-3.5 text-[#38BDF8]" />
-                <span>{t("nav.attendanceSheet")}</span>
+                <span>{language === "en" ? "Attendance" : t("nav.attendanceSheet")}</span>
               </Link>
             )}
 
@@ -188,9 +188,9 @@ export function Navbar() {
             {isModeratorOrAbove && (
               <Link
                 href="/sessions"
-                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${pathname === "/sessions"
-                  ? "bg-[#1E2238] text-white shadow-xs border border-[#373A56]"
-                  : "text-[#94A3B8] hover:text-white hover:bg-[#141726]"
+                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 whitespace-nowrap shrink-0 ${pathname === "/sessions"
+                  ? "bg-[#233D30] text-white dark:bg-[#1E2238] dark:text-white shadow-xs border border-[#233D30] dark:border-[#373A56]"
+                  : "text-[#77786F] hover:text-[#233D30] hover:bg-[#EFEDE5] dark:text-[#94A3B8] dark:hover:text-white dark:hover:bg-[#141726]"
                   }`}
               >
                 <Calendar className="w-3.5 h-3.5 text-[#A78BFA]" />
@@ -200,13 +200,13 @@ export function Navbar() {
 
             {/* Moderator & Admin Unified Dropdown */}
             {isModeratorOrAbove && (
-              <div className="relative" ref={dropdownRef}>
+              <div className="relative shrink-0" ref={dropdownRef}>
                 <button
                   type="button"
                   onClick={() => setAdminDropdownOpen(!adminDropdownOpen)}
-                  className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${isAdminActive || adminDropdownOpen
-                    ? "bg-[#1E2238] text-white shadow-xs border border-[#373A56]"
-                    : "text-[#94A3B8] hover:text-white hover:bg-[#141726]"
+                  className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${isAdminActive || adminDropdownOpen
+                    ? "bg-[#233D30] text-white dark:bg-[#1E2238] dark:text-white shadow-xs border border-[#233D30] dark:border-[#373A56]"
+                    : "text-[#77786F] hover:text-[#233D30] hover:bg-[#EFEDE5] dark:text-[#94A3B8] dark:hover:text-white dark:hover:bg-[#141726]"
                     }`}
                 >
                   <Users className="w-3.5 h-3.5 text-[#F59E0B]" />
@@ -347,7 +347,7 @@ export function Navbar() {
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-2 rounded-xl border border-[#2B304A] bg-[#161828] hover:bg-[#20243C] text-white transition-colors cursor-pointer shrink-0 shadow-xs"
+              className="p-2 rounded-xl border border-[#E4E0D5] dark:border-[#2B304A] bg-[#F7F6F1] dark:bg-[#161828] hover:bg-[#EFEDE5] dark:hover:bg-[#20243C] text-[#252922] dark:text-white transition-colors cursor-pointer shrink-0 shadow-xs"
               title={theme === "dark" ? (language === "ar" ? "تفعيل الوضع النهاري" : "Switch to Light Mode") : (language === "ar" ? "تفعيل الوضع الليلي" : "Switch to Dark Mode")}
               aria-label="Toggle Theme"
             >
@@ -362,7 +362,7 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
-              className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold rounded-xl border border-[#2B304A] bg-[#161828] hover:bg-[#20243C] text-white transition-colors cursor-pointer shrink-0 shadow-xs"
+              className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold rounded-xl border border-[#E4E0D5] dark:border-[#2B304A] bg-[#F7F6F1] dark:bg-[#161828] hover:bg-[#EFEDE5] dark:hover:bg-[#20243C] text-[#252922] dark:text-white transition-colors cursor-pointer shrink-0 shadow-xs"
               title="تغيير اللغة / Switch Language"
             >
               <Globe className="w-3.5 h-3.5 text-[#F59E0B]" />
@@ -473,28 +473,45 @@ export function Navbar() {
               </div>
             )}
 
-            {/* Mobile Menu Toggle Button */}
+            {/* Animated Mobile Menu Toggle Button */}
             <button
+              type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-1.5 sm:p-2 rounded-lg text-[#94A3B8] hover:text-white hover:bg-[#161828] transition-colors cursor-pointer"
+              className="lg:hidden relative w-9 h-9 flex flex-col items-center justify-center rounded-xl border border-[#E4E0D5] dark:border-[#2B304A] bg-[#F7F6F1] dark:bg-[#161828] text-[#252922] dark:text-white transition-all cursor-pointer shadow-xs focus:outline-none"
               aria-label="Toggle navigation menu"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              <div className="w-4.5 h-3.5 relative flex flex-col justify-between">
+                <span
+                  className={`h-0.5 w-full bg-current rounded-full transform transition-all duration-300 origin-center ${
+                    mobileMenuOpen ? "rotate-45 translate-y-[6px]" : ""
+                  }`}
+                />
+                <span
+                  className={`h-0.5 w-full bg-current rounded-full transition-all duration-200 ${
+                    mobileMenuOpen ? "opacity-0 scale-x-0" : "opacity-100"
+                  }`}
+                />
+                <span
+                  className={`h-0.5 w-full bg-current rounded-full transform transition-all duration-300 origin-center ${
+                    mobileMenuOpen ? "-rotate-45 -translate-y-[6px]" : ""
+                  }`}
+                />
+              </div>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer (100% Light Mode & Dark Mode Compatible) */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-[#1E2132] bg-[#0D0F1A] px-4 pt-3 pb-6 space-y-4">
+        <div className="lg:hidden border-t border-[#E4E0D5] dark:border-[#1E2132] bg-[#FAF5EA] dark:bg-[#0D0F1A] px-4 pt-3 pb-6 space-y-4 animate-in slide-in-from-top-2 fade-in duration-200 shadow-xl">
           {/* Guest CTAs on Mobile */}
           {!user && (
             <div className="grid grid-cols-2 gap-2 p-1">
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2.5 px-3 rounded-xl border border-[#262A42] bg-[#141624] text-white text-xs font-bold text-center shadow-xs"
+                className="py-2.5 px-3 rounded-xl border border-[#E4E0D5] dark:border-[#262A42] bg-white dark:bg-[#141624] text-[#252922] dark:text-white text-xs font-bold text-center shadow-xs"
               >
                 {t("common.login")}
               </Link>
@@ -508,23 +525,9 @@ export function Navbar() {
             </div>
           )}
 
-          {/* Mobile Language Switcher */}
-          <div className="p-2.5 bg-[#141624] rounded-xl border border-[#262A42] flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs font-semibold text-white">
-              <Globe className="w-4 h-4 text-[#F59E0B]" />
-              <span>{language === "ar" ? "اللغة / Language" : "Language / اللغة"}</span>
-            </div>
-            <button
-              onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
-              className="px-3 py-1.5 text-xs font-bold rounded-lg bg-[#1E2238] border border-[#373A56] text-white hover:bg-[#252A44] transition-colors cursor-pointer"
-            >
-              {language === "ar" ? "English" : "العربية"}
-            </button>
-          </div>
-
           {/* User Info on Mobile */}
           {user && (
-            <div className="p-3 bg-[#141624] rounded-xl border border-[#262A42] flex items-center justify-between">
+            <div className="p-3 bg-white dark:bg-[#141624] rounded-2xl border border-[#E4E0D5] dark:border-[#262A42] flex items-center justify-between shadow-xs">
               <Link
                 href="/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
@@ -537,17 +540,17 @@ export function Navbar() {
                   size="md"
                 />
                 <div>
-                  <span className="font-bold text-xs text-white block">
+                  <span className="font-bold text-xs text-[#252922] dark:text-white block">
                     {cleanDisplayName}
                   </span>
-                  <span className="text-[11px] font-semibold text-[#F59E0B]">
+                  <span className="text-[11px] font-semibold text-[#B58A3A] dark:text-[#F59E0B]">
                     {t(`roles.${user.role}`)}
                   </span>
                 </div>
               </Link>
               <button
                 onClick={handleLogout}
-                className="text-xs text-[#EF4444] hover:underline flex items-center gap-1 font-semibold cursor-pointer"
+                className="text-xs text-[#EF4444] hover:underline flex items-center gap-1 font-semibold cursor-pointer p-1.5 rounded-lg hover:bg-[#FAF0F0] dark:hover:bg-[#EF4444]/15"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span>{t("common.logout")}</span>
@@ -555,13 +558,16 @@ export function Navbar() {
             </div>
           )}
 
-          {/* Primary Nav */}
+          {/* Primary Nav Links */}
           <div className="space-y-1">
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className={`block px-3 py-2 rounded-lg text-xs font-semibold ${pathname === "/" ? "bg-[#1E2238] text-white" : "text-[#94A3B8] hover:bg-[#161828]"
-                }`}
+              className={`block px-3.5 py-2.5 rounded-xl text-xs font-bold transition-colors ${
+                pathname === "/"
+                  ? "bg-[#233D30] text-white dark:bg-[#1E2238] dark:text-white shadow-xs"
+                  : "text-[#77786F] dark:text-[#94A3B8] hover:bg-white dark:hover:bg-[#161828] hover:text-[#252922] dark:hover:text-white"
+              }`}
             >
               {t("nav.leaderboard")}
             </Link>
@@ -570,10 +576,11 @@ export function Navbar() {
               <Link
                 href="/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block px-3 py-2 rounded-lg text-xs font-semibold ${pathname === "/dashboard"
-                  ? "bg-[#1E2238] text-white"
-                  : "text-[#94A3B8] hover:bg-[#161828]"
-                  }`}
+                className={`block px-3.5 py-2.5 rounded-xl text-xs font-bold transition-colors ${
+                  pathname === "/dashboard"
+                    ? "bg-[#233D30] text-white dark:bg-[#1E2238] dark:text-white shadow-xs"
+                    : "text-[#77786F] dark:text-[#94A3B8] hover:bg-white dark:hover:bg-[#161828] hover:text-[#252922] dark:hover:text-white"
+                }`}
               >
                 {t("nav.dashboard")}
               </Link>
@@ -584,10 +591,11 @@ export function Navbar() {
                 <Link
                   href="/attendance"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`block px-3 py-2 rounded-lg text-xs font-semibold ${pathname === "/attendance"
-                    ? "bg-[#1E2238] text-white"
-                    : "text-[#94A3B8] hover:bg-[#161828]"
-                    }`}
+                  className={`block px-3.5 py-2.5 rounded-xl text-xs font-bold transition-colors ${
+                    pathname === "/attendance"
+                      ? "bg-[#233D30] text-white dark:bg-[#1E2238] dark:text-white shadow-xs"
+                      : "text-[#77786F] dark:text-[#94A3B8] hover:bg-white dark:hover:bg-[#161828] hover:text-[#252922] dark:hover:text-white"
+                  }`}
                 >
                   {t("nav.attendanceSheet")}
                 </Link>
@@ -595,21 +603,23 @@ export function Navbar() {
                 <Link
                   href="/sessions"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`block px-3 py-2 rounded-lg text-xs font-semibold ${pathname === "/sessions"
-                    ? "bg-[#1E2238] text-white"
-                    : "text-[#94A3B8] hover:bg-[#161828]"
-                    }`}
+                  className={`block px-3.5 py-2.5 rounded-xl text-xs font-bold transition-colors ${
+                    pathname === "/sessions"
+                      ? "bg-[#233D30] text-white dark:bg-[#1E2238] dark:text-white shadow-xs"
+                      : "text-[#77786F] dark:text-[#94A3B8] hover:bg-white dark:hover:bg-[#161828] hover:text-[#252922] dark:hover:text-white"
+                  }`}
                 >
-                  {t("nav.sessions")}
+                  {language === "ar" ? "التسبحة والسبوت" : "Sessions & Saturdays"}
                 </Link>
 
                 <Link
                   href="/qr"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`block px-3 py-2 rounded-lg text-xs font-semibold ${pathname === "/qr"
-                    ? "bg-[#1E2238] text-white"
-                    : "text-[#94A3B8] hover:bg-[#161828]"
-                    }`}
+                  className={`block px-3.5 py-2.5 rounded-xl text-xs font-bold transition-colors ${
+                    pathname === "/qr"
+                      ? "bg-[#233D30] text-white dark:bg-[#1E2238] dark:text-white shadow-xs"
+                      : "text-[#77786F] dark:text-[#94A3B8] hover:bg-white dark:hover:bg-[#161828] hover:text-[#252922] dark:hover:text-white"
+                  }`}
                 >
                   {language === "ar" ? "مسح بطاقة حضور مخدوم (QR)" : "Scan Member QR Pass"}
                 </Link>
@@ -617,7 +627,11 @@ export function Navbar() {
                 <Link
                   href="/admin/members"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-xs font-semibold text-[#CBD5E1] hover:bg-[#161828]"
+                  className={`block px-3.5 py-2.5 rounded-xl text-xs font-bold transition-colors ${
+                    pathname.startsWith("/admin/members")
+                      ? "bg-[#233D30] text-white dark:bg-[#1E2238] dark:text-white shadow-xs"
+                      : "text-[#77786F] dark:text-[#94A3B8] hover:bg-white dark:hover:bg-[#161828] hover:text-[#252922] dark:hover:text-white"
+                  }`}
                 >
                   {t("nav.members")}
                 </Link>
@@ -625,15 +639,15 @@ export function Navbar() {
             )}
 
             {isAdminOrAbove && (
-              <div className="pt-2 border-t border-[#1E2132] space-y-1">
-                <span className="text-[10px] font-bold text-[#94A3B8] uppercase px-3 block">
+              <div className="pt-2 border-t border-[#E4E0D5] dark:border-[#1E2132] space-y-1">
+                <span className="text-[10px] font-bold text-[#77786F] dark:text-[#94A3B8] uppercase px-3 block">
                   {language === "ar" ? "الإدارة والرقابة" : "Administration"}
                 </span>
 
                 <Link
                   href="/admin/resets"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-xs font-semibold text-[#CBD5E1] hover:bg-[#161828]"
+                  className="block px-3.5 py-2 rounded-lg text-xs font-semibold text-[#77786F] dark:text-[#CBD5E1] hover:bg-white dark:hover:bg-[#161828]"
                 >
                   {t("nav.streakResets")}
                 </Link>
@@ -641,7 +655,7 @@ export function Navbar() {
                 <Link
                   href="/admin/merges"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-xs font-semibold text-[#CBD5E1] hover:bg-[#161828]"
+                  className="block px-3.5 py-2 rounded-lg text-xs font-semibold text-[#77786F] dark:text-[#CBD5E1] hover:bg-white dark:hover:bg-[#161828]"
                 >
                   {t("nav.mergeAccounts")}
                 </Link>
@@ -649,7 +663,7 @@ export function Navbar() {
                 <Link
                   href="/admin/rewards"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-xs font-semibold text-[#CBD5E1] hover:bg-[#161828]"
+                  className="block px-3.5 py-2 rounded-lg text-xs font-semibold text-[#77786F] dark:text-[#CBD5E1] hover:bg-white dark:hover:bg-[#161828]"
                 >
                   {t("nav.rewards")}
                 </Link>
@@ -657,7 +671,7 @@ export function Navbar() {
                 <Link
                   href="/admin/reports"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-xs font-semibold text-[#CBD5E1] hover:bg-[#161828]"
+                  className="block px-3.5 py-2 rounded-lg text-xs font-semibold text-[#77786F] dark:text-[#CBD5E1] hover:bg-white dark:hover:bg-[#161828]"
                 >
                   {t("nav.reports")}
                 </Link>
@@ -665,7 +679,7 @@ export function Navbar() {
                 <Link
                   href="/admin/analytics"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-xs font-semibold text-[#CBD5E1] hover:bg-[#161828]"
+                  className="block px-3.5 py-2 rounded-lg text-xs font-semibold text-[#77786F] dark:text-[#CBD5E1] hover:bg-white dark:hover:bg-[#161828]"
                 >
                   {t("nav.analytics")}
                 </Link>
@@ -673,42 +687,42 @@ export function Navbar() {
                 <Link
                   href="/admin/settings"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-xs font-semibold text-[#CBD5E1] hover:bg-[#161828]"
+                  className="block px-3.5 py-2 rounded-lg text-xs font-semibold text-[#77786F] dark:text-[#CBD5E1] hover:bg-white dark:hover:bg-[#161828]"
                 >
                   {t("nav.settings")}
                 </Link>
               </div>
             )}
+          </div>
 
-            {/* Mobile Footer: Theme & Language Toggle */}
-            <div className="pt-3 mt-3 border-t border-[#1E2132] flex items-center justify-between gap-2">
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="flex-1 py-2 px-3 rounded-lg border border-[#2B304A] bg-[#161828] text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer"
-              >
-                {theme === "dark" ? (
-                  <>
-                    <Sun className="w-4 h-4 text-[#F59E0B]" />
-                    <span>{language === "ar" ? "الوضع الفاتح" : "Light Mode"}</span>
-                  </>
-                ) : (
-                  <>
-                    <Moon className="w-4 h-4 text-[#38BDF8]" />
-                    <span>{language === "ar" ? "الوضع الليلي" : "Dark Mode"}</span>
-                  </>
-                )}
-              </button>
+          {/* Mobile Footer: Theme & Language Toggle */}
+          <div className="pt-3 mt-3 border-t border-[#E4E0D5] dark:border-[#1E2132] flex items-center justify-between gap-2">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex-1 py-2.5 px-3 rounded-xl border border-[#E4E0D5] dark:border-[#2B304A] bg-white dark:bg-[#161828] text-[#252922] dark:text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+            >
+              {theme === "dark" ? (
+                <>
+                  <Sun className="w-4 h-4 text-[#F59E0B]" />
+                  <span>{language === "ar" ? "الوضع الفاتح" : "Light Mode"}</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-4 h-4 text-[#38BDF8]" />
+                  <span>{language === "ar" ? "الوضع الليلي" : "Dark Mode"}</span>
+                </>
+              )}
+            </button>
 
-              <button
-                type="button"
-                onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
-                className="flex-1 py-2 px-3 rounded-lg border border-[#2B304A] bg-[#161828] text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Globe className="w-4 h-4 text-[#F59E0B]" />
-                <span>{language === "ar" ? "English" : "العربية"}</span>
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
+              className="flex-1 py-2.5 px-3 rounded-xl border border-[#E4E0D5] dark:border-[#2B304A] bg-white dark:bg-[#161828] text-[#252922] dark:text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+            >
+              <Globe className="w-4 h-4 text-[#F59E0B]" />
+              <span>{language === "ar" ? "English" : "العربية"}</span>
+            </button>
           </div>
         </div>
       )}

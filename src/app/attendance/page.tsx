@@ -325,7 +325,7 @@ export default function AttendancePage() {
   });
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F6F1]">
+    <div className="min-h-screen flex flex-col bg-[#F7F6F1] dark:bg-[#0B0C14] text-[#252922] dark:text-white">
       <Navbar />
 
       {/* Floating Toast Notification */}
@@ -342,7 +342,7 @@ export default function AttendancePage() {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
         {/* Top Operational Bar */}
-        <div className="bg-white rounded-xl border border-[#E4E0D5] p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
+        <div className="bg-white dark:bg-[#121422] rounded-xl border border-[#E4E0D5] dark:border-[#232740] p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#233D30] text-[#B58A3A] flex items-center justify-center shrink-0 border border-[#B58A3A]/40">
               <CopticCross className="w-5 h-5" color="#B58A3A" />
@@ -380,16 +380,16 @@ export default function AttendancePage() {
             {/* Quick Add Member */}
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-3.5 py-2 rounded-lg border border-[#E4E0D5] bg-[#EFEDE5] hover:bg-[#E4E0D5] text-[#252922] text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-lg border border-[#E4E0D5] dark:border-[#2B304C] bg-[#EFEDE5] dark:bg-[#161828] hover:bg-[#E4E0D5] dark:hover:bg-[#20243C] text-[#252922] dark:text-white text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
             >
-              <UserPlus className="w-4 h-4 text-[#77786F]" />
+              <UserPlus className="w-4 h-4 text-[#77786F] dark:text-[#94A3B8]" />
               <span>{t("attendance.quickAddMember")}</span>
             </button>
 
             {/* Projector Church QR Display */}
             <button
               onClick={handleGenerateChurchQR}
-              className="px-3.5 py-2 rounded-lg border border-[#B58A3A] bg-[#FAF5EA] text-[#B58A3A] hover:bg-[#E8D9B8]/40 text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-lg border border-[#B58A3A] bg-[#FAF5EA] dark:bg-[#F59E0B]/10 text-[#B58A3A] dark:text-[#F59E0B] hover:bg-[#E8D9B8]/40 dark:hover:bg-[#F59E0B]/20 text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <QrCode className="w-4 h-4" />
               <span>{t("qr.sessionQrDisplay")}</span>
@@ -433,14 +433,14 @@ export default function AttendancePage() {
           <div
             onClick={() => setFilter("PRESENT")}
             className={`p-3 sm:p-4 rounded-xl border cursor-pointer transition-all ${filter === "PRESENT"
-              ? "bg-[#EEF5F1] border-[#233D30] shadow-xs"
-              : "bg-white border-[#E4E0D5] hover:bg-[#F7F6F1]"
+              ? "bg-[#EEF5F1] dark:bg-[#10B981]/20 border-[#233D30] dark:border-[#10B981] shadow-xs"
+              : "bg-white dark:bg-[#121422] border-[#E4E0D5] dark:border-[#232740] hover:bg-[#F7F6F1] dark:hover:bg-[#1A1D30]"
               }`}
           >
-            <span className="text-[11px] font-sans font-semibold text-[#233D30] block">
+            <span className="text-[11px] font-sans font-semibold text-[#233D30] dark:text-[#10B981] block">
               {t("attendance.presentCount")}
             </span>
-            <span className="text-xl sm:text-3xl font-black text-[#233D30]">
+            <span className="text-xl sm:text-3xl font-black text-[#233D30] dark:text-[#10B981]">
               {presentCount}
             </span>
           </div>
@@ -448,14 +448,14 @@ export default function AttendancePage() {
           <div
             onClick={() => setFilter("ABSENT")}
             className={`p-3 sm:p-4 rounded-xl border cursor-pointer transition-all ${filter === "ABSENT"
-              ? "bg-[#FAF0F0] border-[#8C2929] shadow-xs"
-              : "bg-white border-[#E4E0D5] hover:bg-[#F7F6F1]"
+              ? "bg-[#FAF0F0] dark:bg-[#EF4444]/20 border-[#8C2929] dark:border-[#EF4444] shadow-xs"
+              : "bg-white dark:bg-[#121422] border-[#E4E0D5] dark:border-[#232740] hover:bg-[#F7F6F1] dark:hover:bg-[#1A1D30]"
               }`}
           >
-            <span className="text-[11px] font-sans font-semibold text-[#8C2929] block">
+            <span className="text-[11px] font-sans font-semibold text-[#8C2929] dark:text-[#EF4444] block">
               {t("attendance.absentCount")}
             </span>
-            <span className="text-xl sm:text-3xl font-black text-[#8C2929]">
+            <span className="text-xl sm:text-3xl font-black text-[#8C2929] dark:text-[#EF4444]">
               {absentCount}
             </span>
           </div>
@@ -463,29 +463,29 @@ export default function AttendancePage() {
           <div
             onClick={() => setFilter("UNMARKED")}
             className={`p-3 sm:p-4 rounded-xl border cursor-pointer transition-all ${filter === "UNMARKED"
-              ? "bg-[#EFEDE5] border-[#252922] shadow-xs"
-              : "bg-white border-[#E4E0D5] hover:bg-[#F7F6F1]"
+              ? "bg-[#EFEDE5] dark:bg-[#25283E] border-[#252922] dark:border-[#94A3B8] shadow-xs"
+              : "bg-white dark:bg-[#121422] border-[#E4E0D5] dark:border-[#232740] hover:bg-[#F7F6F1] dark:hover:bg-[#1A1D30]"
               }`}
           >
-            <span className="text-[11px] font-sans font-semibold text-[#77786F] block">
+            <span className="text-[11px] font-sans font-semibold text-[#77786F] dark:text-[#94A3B8] block">
               {t("attendance.unmarked")}
             </span>
-            <span className="text-xl sm:text-3xl font-black text-[#77786F]">
+            <span className="text-xl sm:text-3xl font-black text-[#77786F] dark:text-[#94A3B8]">
               {unmarkedCount}
             </span>
           </div>
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="bg-white rounded-xl border border-[#E4E0D5] p-3 sm:p-4 flex flex-col sm:flex-row gap-3 items-center justify-between shadow-xs">
+        <div className="bg-white dark:bg-[#121422] rounded-xl border border-[#E4E0D5] dark:border-[#232740] p-3 sm:p-4 flex flex-col sm:flex-row gap-3 items-center justify-between shadow-xs">
           <div className="relative w-full sm:max-w-md">
-            <Search className="w-3.5 h-3.5 absolute top-3 rtl:right-3 ltr:left-3 text-[#77786F]" />
+            <Search className="w-3.5 h-3.5 absolute top-3 rtl:right-3 ltr:left-3 text-[#77786F] dark:text-[#94A3B8]" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t("common.search")}
-              className="w-full text-xs py-2 rtl:pr-8 ltr:pl-8 rtl:pl-3 ltr:pr-3 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] text-[#252922] focus:bg-white focus:outline-hidden"
+              className="w-full text-xs py-2 rtl:pr-8 ltr:pl-8 rtl:pl-3 ltr:pr-3 rounded-lg border border-[#E4E0D5] dark:border-[#2B304C] bg-[#F7F6F1] dark:bg-[#161828] text-[#252922] dark:text-white focus:bg-white dark:focus:bg-[#1A1D30] focus:outline-hidden"
             />
           </div>
 
@@ -496,8 +496,8 @@ export default function AttendancePage() {
                 key={mode}
                 onClick={() => setFilter(mode)}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors cursor-pointer shrink-0 ${filter === mode
-                  ? "bg-[#233D30] text-white"
-                  : "text-[#77786F] hover:bg-[#EFEDE5]"
+                  ? "bg-[#233D30] text-white dark:bg-[#10B981] dark:text-[#0B0C14]"
+                  : "text-[#77786F] dark:text-[#94A3B8] hover:bg-[#EFEDE5] dark:hover:bg-[#1E2238]"
                   }`}
               >
                 {mode === "ALL"
@@ -511,13 +511,13 @@ export default function AttendancePage() {
         </div>
 
         {/* Member Attendance Roster Table */}
-        <div className="bg-white rounded-xl border border-[#E4E0D5] shadow-xs overflow-hidden">
+        <div className="bg-white dark:bg-[#121422] rounded-xl border border-[#E4E0D5] dark:border-[#232740] shadow-xs overflow-hidden">
           {loading ? (
-            <div className="text-center py-16 text-[#77786F] text-xs">
+            <div className="text-center py-16 text-[#77786F] dark:text-[#94A3B8] text-xs">
               {t("common.loading")}
             </div>
           ) : filteredMembers.length === 0 ? (
-            <div className="text-center py-16 text-[#77786F] text-xs">
+            <div className="text-center py-16 text-[#77786F] dark:text-[#94A3B8] text-xs">
               {t("common.noData")}
             </div>
           ) : (
@@ -526,7 +526,7 @@ export default function AttendancePage() {
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-right ltr:text-left text-xs">
                   <thead>
-                    <tr className="border-b border-[#E4E0D5] dark:border-[#232740] bg-[#EFEDE5]/60 dark:bg-[#161828] text-[11px] font-bold text-[#77786F] dark:text-[#94A3B8] uppercase tracking-wider">
+                    <tr className="border-b border-[#E4E0D5] dark:border-[#232740] bg-[#EFEDE5]/80 dark:bg-[#161828] text-[11px] font-bold text-[#77786F] dark:text-[#94A3B8] uppercase tracking-wider">
                       <th className="py-3 px-4">{t("common.name")}</th>
                       <th className="py-3 px-4">{t("common.phone")}</th>
                       <th className="py-3 px-4 text-center">{t("streaks.currentStreak")}</th>
@@ -562,7 +562,7 @@ export default function AttendancePage() {
                                 fullName={cleanName}
                                 size="xs"
                               />
-                              <span>{cleanName}</span>
+                              <span className="text-[#252922] dark:text-white font-bold">{cleanName}</span>
                             </div>
                           </td>
                           <td className="py-3 px-4 font-mono text-xs text-[#77786F] dark:text-[#94A3B8]">
@@ -606,7 +606,7 @@ export default function AttendancePage() {
                                 onClick={() => handleMarkAttendance(m.memberId, "PRESENT")}
                                 className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${isPresent
                                   ? "bg-[#233D30] dark:bg-[#10B981] text-white shadow-xs"
-                                  : "border border-[#233D30] dark:border-[#10B981]/40 text-[#233D30] dark:text-[#10B981] hover:bg-[#233D30]/10 dark:hover:bg-[#10B981]/15"
+                                  : "border border-[#233D30] bg-[#EEF5F1] text-[#233D30] hover:bg-[#233D30] hover:text-white dark:border-[#10B981]/40 dark:bg-[#10B981]/10 dark:text-[#10B981] dark:hover:bg-[#10B981] dark:hover:text-[#0B0C14]"
                                   }`}
                               >
                                 {t("attendance.markPresent")}
@@ -616,7 +616,7 @@ export default function AttendancePage() {
                                 onClick={() => handleMarkAttendance(m.memberId, "ABSENT")}
                                 className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${isAbsent
                                   ? "bg-[#8C2929] dark:bg-[#EF4444] text-white shadow-xs"
-                                  : "border border-[#8C2929] dark:border-[#EF4444]/40 text-[#8C2929] dark:text-[#EF4444] hover:bg-[#8C2929]/10 dark:hover:bg-[#EF4444]/15"
+                                  : "border border-[#8C2929] bg-[#FAF0F0] text-[#8C2929] hover:bg-[#8C2929] hover:text-white dark:border-[#EF4444]/40 dark:bg-[#EF4444]/10 dark:text-[#EF4444] dark:hover:bg-[#EF4444] dark:hover:text-white"
                                   }`}
                               >
                                 {t("attendance.markAbsent")}
@@ -670,7 +670,7 @@ export default function AttendancePage() {
                           onClick={() => handleMarkAttendance(m.memberId, "PRESENT")}
                           className={`py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${isPresent
                             ? "bg-[#233D30] dark:bg-[#10B981] text-white shadow-xs"
-                            : "border border-[#233D30] dark:border-[#10B981]/40 text-[#233D30] dark:text-[#10B981] hover:bg-[#233D30]/10 dark:hover:bg-[#10B981]/15"
+                            : "border border-[#233D30] bg-[#EEF5F1] text-[#233D30] hover:bg-[#233D30] hover:text-white dark:border-[#10B981]/40 dark:bg-[#10B981]/10 dark:text-[#10B981] dark:hover:bg-[#10B981] dark:hover:text-[#0B0C14]"
                             }`}
                         >
                           <Check className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -682,7 +682,7 @@ export default function AttendancePage() {
                           onClick={() => handleMarkAttendance(m.memberId, "ABSENT")}
                           className={`py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${isAbsent
                             ? "bg-[#8C2929] dark:bg-[#EF4444] text-white shadow-xs"
-                            : "border border-[#8C2929] dark:border-[#EF4444]/40 text-[#8C2929] dark:text-[#EF4444] hover:bg-[#8C2929]/10 dark:hover:bg-[#EF4444]/15"
+                            : "border border-[#8C2929] bg-[#FAF0F0] text-[#8C2929] hover:bg-[#8C2929] hover:text-white dark:border-[#EF4444]/40 dark:bg-[#EF4444]/10 dark:text-[#EF4444] dark:hover:bg-[#EF4444] dark:hover:text-white"
                             }`}
                         >
                           <X className="w-3.5 h-3.5 stroke-[2.5]" />

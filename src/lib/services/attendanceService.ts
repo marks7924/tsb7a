@@ -40,7 +40,24 @@ export async function ensureSaturdaySessionsExist() {
         attendances: { none: {} },
       },
     });
-  } catch {}
+
+    // Clean up any test session titles like "Test Sat 2026-11-07T00:00:00.000Z"
+    const testSessions = await prisma.saturdaySession.findMany({
+      where: {
+        OR: [
+          { title: { startsWith: "Test Sat" } },
+          { title: { contains: "T00:00:00" } },
+        ],
+      },
+    });
+    for (const ts of testSessions) {
+      const dateStr = ts.date.toISOString().split("T")[0];
+      await prisma.saturdaySession.update({
+        where: { id: ts.id },
+        data: { title: `تسبحة سبت ${dateStr}` },
+      });
+    }
+  } catch { }
 
   // 2. Identify the 2 or 3 Saturdays
   const lastSat = new Date(cairoNow);
@@ -74,7 +91,7 @@ export async function ensureSaturdaySessionsExist() {
         },
       });
     }
-  } catch {}
+  } catch { }
 
   // If today is Saturday, ensure today's session exists and is ACTIVE if >= 10 am
   if (todaySat) {
@@ -98,7 +115,7 @@ export async function ensureSaturdaySessionsExist() {
           data: { status: "ACTIVE", qrActive: true },
         });
       }
-    } catch {}
+    } catch { }
   }
 
   // Ensure next Saturday exists
@@ -115,7 +132,7 @@ export async function ensureSaturdaySessionsExist() {
         },
       });
     }
-  } catch {}
+  } catch { }
 }
 
 export async function createSaturdaySession(params: {
@@ -254,6 +271,54 @@ export async function reverseSaturdayOff(params: {
   }
 
   return updated;
+}
+
+/**
+ * Permanently delete a praise session and its attendances (used for Archive cleanup).
+ */
+export async function deleteSaturdaySession(params: {
+  sessionId: string;
+  actorId?: string;
+  actorName?: string;
+  actorRole?: string;
+}) {
+  const session = await prisma.saturdaySession.findUnique({
+    where: { id: params.sessionId },
+    include: { attendances: true },
+  });
+
+  if (!session) {
+    throw new Error("SESSION_NOT_FOUND");
+  }
+
+  // Delete attendances first
+  if (session.attendances.length > 0) {
+    await prisma.attendance.deleteMany({
+      where: { sessionId: params.sessionId },
+    });
+  }
+
+  const deleted = await prisma.saturdaySession.delete({
+    where: { id: params.sessionId },
+  });
+
+  // Recompute stats for affected members
+  for (const att of session.attendances) {
+    await recalculateMemberStats(att.memberId);
+  }
+
+  await logActivity({
+    action: "DELETE_SATURDAY_SESSION",
+    targetEntity: "SaturdaySession",
+    targetId: params.sessionId,
+    actorId: params.actorId,
+    actorName: params.actorName,
+    actorRole: params.actorRole,
+    oldValue: { date: session.date, status: session.status, title: session.title },
+    reason: "Deleted from past praises archive",
+  });
+
+  return deleted;
 }
 
 export async function markAttendance(params: {
@@ -459,7 +524,7 @@ export async function recordMemberAttendanceViaQRScan(params: {
         type: "ATTENDANCE",
       },
     });
-  } catch {}
+  } catch { }
 
   return {
     success: true,

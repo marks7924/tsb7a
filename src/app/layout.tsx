@@ -29,7 +29,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl" className={`dark ${plexArabic.variable} ${inter.variable}`}>
-      <body className="min-h-screen font-sans antialiased flex flex-col selection:bg-[#10B981]/30 selection:text-white bg-[#0B0C14] text-white">
+      <body className="min-h-screen font-sans antialiased flex flex-col selection:bg-[#10B981]/30 selection:text-white bg-[#F7F6F1] dark:bg-[#0B0C14] text-[#252922] dark:text-white">
         <ThemeProvider>
           <LanguageProvider initialLanguage="ar">
             {children}

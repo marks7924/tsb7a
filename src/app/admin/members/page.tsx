@@ -286,20 +286,20 @@ export default function MembersAdminPage() {
         </div>
 
         {/* Member Directory Ledger */}
-        <div className="bg-white rounded-xl border border-[#E4E0D5] shadow-xs overflow-hidden">
+        <div className="bg-white dark:bg-[#121422] rounded-xl border border-[#E4E0D5] dark:border-[#232740] shadow-xs overflow-hidden">
           {loading ? (
-            <div className="text-center py-16 text-[#77786F] text-xs">
+            <div className="text-center py-16 text-[#77786F] dark:text-[#94A3B8] text-xs">
               {t("common.loading")}
             </div>
           ) : members.length === 0 ? (
-            <div className="text-center py-16 text-[#77786F] text-xs">
+            <div className="text-center py-16 text-[#77786F] dark:text-[#94A3B8] text-xs">
               {t("common.noData")}
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-right ltr:text-left text-xs">
                 <thead>
-                  <tr className="border-b border-[#E4E0D5] dark:border-[#232740] bg-[#EFEDE5]/60 dark:bg-[#161828] text-[11px] font-bold text-[#77786F] dark:text-[#94A3B8] uppercase tracking-wider">
+                  <tr className="border-b border-[#E4E0D5] dark:border-[#232740] bg-[#EFEDE5]/80 dark:bg-[#161828] text-[11px] font-bold text-[#77786F] dark:text-[#94A3B8] uppercase tracking-wider">
                     <th className="py-3 px-4">{t("common.name")}</th>
                     <th className="py-3 px-4">{t("common.phone")}</th>
                     <th className="py-3 px-4">{t("common.role")}</th>
@@ -316,7 +316,7 @@ export default function MembersAdminPage() {
                     const hasAccount = !!m.loginAccount;
 
                     return (
-                      <tr key={m.id} className="hover:bg-[#FAF5EA]/30 dark:hover:bg-[#1A1D30] transition-colors">
+                      <tr key={m.id} className="hover:bg-[#FAF5EA]/40 dark:hover:bg-[#1A1D30] transition-colors">
                         <td className="py-3 px-4 font-bold text-xs text-[#252922] dark:text-white">
                           <div className="flex items-center gap-2.5">
                             <MemberAvatar
@@ -325,7 +325,7 @@ export default function MembersAdminPage() {
                               fullName={m.fullName}
                               size="sm"
                             />
-                            <span>{m.fullName}</span>
+                            <span className="text-[#252922] dark:text-white font-bold">{m.fullName}</span>
                           </div>
                         </td>
                         <td className="py-3 px-4 font-mono text-xs text-[#77786F] dark:text-[#94A3B8]">
@@ -505,11 +505,10 @@ export default function MembersAdminPage() {
                     <div className="space-y-2 text-xs">
                       {/* Option 1: Phone Number */}
                       <label
-                        className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
-                          pwdMode === "PHONE"
+                        className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${pwdMode === "PHONE"
                             ? "bg-[#FAF5EA] border-[#B58A3A] ring-1 ring-[#B58A3A]/40"
                             : "bg-[#F7F6F1] border-[#E4E0D5] hover:bg-[#EFEDE5]"
-                        }`}
+                          }`}
                       >
                         <input
                           type="radio"
@@ -532,11 +531,10 @@ export default function MembersAdminPage() {
 
                       {/* Option 2: Custom Password */}
                       <label
-                        className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
-                          pwdMode === "CUSTOM"
+                        className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${pwdMode === "CUSTOM"
                             ? "bg-[#FAF5EA] border-[#B58A3A] ring-1 ring-[#B58A3A]/40"
                             : "bg-[#F7F6F1] border-[#E4E0D5] hover:bg-[#EFEDE5]"
-                        }`}
+                          }`}
                       >
                         <input
                           type="radio"
@@ -564,11 +562,10 @@ export default function MembersAdminPage() {
 
                       {/* Option 3: Strong Random */}
                       <label
-                        className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
-                          pwdMode === "RANDOM"
+                        className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${pwdMode === "RANDOM"
                             ? "bg-[#FAF5EA] border-[#B58A3A] ring-1 ring-[#B58A3A]/40"
                             : "bg-[#F7F6F1] border-[#E4E0D5] hover:bg-[#EFEDE5]"
-                        }`}
+                          }`}
                       >
                         <input
                           type="radio"
@@ -602,14 +599,14 @@ export default function MembersAdminPage() {
                       {pwdLoading
                         ? t("common.loading")
                         : pwdMode === "PHONE"
-                        ? language === "ar"
-                          ? "تعيين رقم الهاتف ككلمة سر"
-                          : "Set Phone as Password"
-                        : pwdMode === "CUSTOM"
-                        ? language === "ar"
-                          ? "حفظ كلمة السر المحددة"
-                          : "Save Custom Password"
-                        : t("passwordGen.generateBtn")}
+                          ? language === "ar"
+                            ? "تعيين رقم الهاتف ككلمة سر"
+                            : "Set Phone as Password"
+                          : pwdMode === "CUSTOM"
+                            ? language === "ar"
+                              ? "حفظ كلمة السر المحددة"
+                              : "Save Custom Password"
+                            : t("passwordGen.generateBtn")}
                     </button>
                   </div>
                 </div>
@@ -621,41 +618,41 @@ export default function MembersAdminPage() {
         {/* 1. Score Adjuster Modal (+1, -1, Set) */}
         {scoreTarget && (
           <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-[#E4E0D5] p-6 space-y-5 animate-in fade-in duration-150">
-              <div className="flex items-center justify-between border-b border-[#E4E0D5] pb-3">
+            <div className="max-w-md w-full bg-white dark:bg-[#121422] rounded-2xl shadow-2xl border border-[#E4E0D5] dark:border-[#262A42] p-6 space-y-5 animate-in fade-in duration-150">
+              <div className="flex items-center justify-between border-b border-[#E4E0D5] dark:border-[#262A42] pb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-[#FAF5EA] text-[#B58A3A] flex items-center justify-center border border-[#B58A3A]/30">
+                  <div className="w-8 h-8 rounded-lg bg-[#FAF5EA] dark:bg-[#F59E0B]/20 text-[#B58A3A] dark:text-[#F59E0B] flex items-center justify-center border border-[#B58A3A]/30">
                     <Flame className="w-4 h-4" />
                   </div>
-                  <h3 className="text-sm font-bold text-[#252922]">
+                  <h3 className="text-sm font-bold text-[#252922] dark:text-white">
                     {language === "ar" ? "تعديل النقاط والسلسلة فوراً" : "Instant Score & Streak Adjustment"}
                   </h3>
                 </div>
-                <button onClick={() => setScoreTarget(null)} className="p-1 rounded-md text-[#77786F] hover:bg-[#EFEDE5]">
+                <button onClick={() => setScoreTarget(null)} className="p-1 rounded-md text-[#77786F] dark:text-[#94A3B8] hover:bg-[#EFEDE5] dark:hover:bg-[#1E2238]">
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#F7F6F1] border border-[#E4E0D5] space-y-2 text-xs">
+              <div className="p-3 rounded-xl bg-[#F7F6F1] dark:bg-[#161828] border border-[#E4E0D5] dark:border-[#262A42] space-y-2 text-xs">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-[#252922]">{scoreTarget.fullName}</span>
-                  <span className="font-mono text-[#77786F]">{scoreTarget.phone}</span>
+                  <span className="font-bold text-[#252922] dark:text-white">{scoreTarget.fullName}</span>
+                  <span className="font-mono text-[#77786F] dark:text-[#94A3B8]">{scoreTarget.phone}</span>
                 </div>
-                <div className="grid grid-cols-2 gap-2 pt-1 border-t border-[#E4E0D5]/60 text-[11px]">
+                <div className="grid grid-cols-2 gap-2 pt-1 border-t border-[#E4E0D5]/60 dark:border-[#262A42] text-[11px]">
                   <div>
-                    <span className="text-[#77786F]">{language === "ar" ? "السلسلة الحالية:" : "Current Streak:"} </span>
+                    <span className="text-[#77786F] dark:text-[#94A3B8]">{language === "ar" ? "السلسلة الحالية:" : "Current Streak:"} </span>
                     <strong className="text-[#B58A3A] font-mono text-xs">{scoreTarget.stats?.currentStreak || 0}</strong>
                   </div>
                   <div>
-                    <span className="text-[#77786F]">{language === "ar" ? "إجمالي الحضور:" : "Total Attendance:"} </span>
-                    <strong className="text-[#233D30] font-mono text-xs">{scoreTarget.stats?.totalAttendance || 0}</strong>
+                    <span className="text-[#77786F] dark:text-[#94A3B8]">{language === "ar" ? "إجمالي الحضور:" : "Total Attendance:"} </span>
+                    <strong className="text-[#233D30] dark:text-[#10B981] font-mono text-xs">{scoreTarget.stats?.totalAttendance || 0}</strong>
                   </div>
                 </div>
               </div>
 
               {/* Field to adjust */}
               <div>
-                <label className="block text-xs font-semibold text-[#252922] mb-1.5">
+                <label className="block text-xs font-semibold text-[#252922] dark:text-white mb-1.5">
                   {language === "ar" ? "اختر الحقل المراد تعديله:" : "Field to adjust:"}
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -667,7 +664,7 @@ export default function MembersAdminPage() {
                     }}
                     className={`py-2 px-3 rounded-lg text-xs font-bold border transition-colors cursor-pointer ${scoreField === "currentStreak"
                       ? "bg-[#233D30] text-white border-[#233D30]"
-                      : "bg-white text-[#252922] border-[#E4E0D5] hover:bg-[#FAF5EA]"
+                      : "bg-white dark:bg-[#161828] text-[#252922] dark:text-white border-[#E4E0D5] dark:border-[#262A42] hover:bg-[#FAF5EA] dark:hover:bg-[#1E2238]"
                       }`}
                   >
                     {t("streaks.currentStreak")}
@@ -680,7 +677,7 @@ export default function MembersAdminPage() {
                     }}
                     className={`py-2 px-3 rounded-lg text-xs font-bold border transition-colors cursor-pointer ${scoreField === "totalAttendance"
                       ? "bg-[#233D30] text-white border-[#233D30]"
-                      : "bg-white text-[#252922] border-[#E4E0D5] hover:bg-[#FAF5EA]"
+                      : "bg-white dark:bg-[#161828] text-[#252922] dark:text-white border-[#E4E0D5] dark:border-[#262A42] hover:bg-[#FAF5EA] dark:hover:bg-[#1E2238]"
                       }`}
                   >
                     {t("streaks.allTimeAttendance")}
@@ -690,35 +687,35 @@ export default function MembersAdminPage() {
 
               {/* Quick Increment Buttons */}
               <div className="space-y-1.5">
-                <span className="text-[11px] font-semibold text-[#77786F] block">
+                <span className="text-[11px] font-semibold text-[#77786F] dark:text-[#94A3B8] block">
                   {language === "ar" ? "إجراءات سريعة بنقرة واحدة:" : "1-Click Quick Adjustments:"}
                 </span>
                 <div className="grid grid-cols-4 gap-2">
                   <button
                     disabled={scoreLoading}
                     onClick={() => handleAdjustScore("ADD", 1)}
-                    className="py-2 rounded-lg border border-[#233D30]/30 bg-[#EEF5F1] hover:bg-[#233D30] hover:text-white text-[#233D30] font-mono font-bold text-xs flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                    className="py-2.5 rounded-xl border border-[#233D30]/40 bg-[#EEF5F1] hover:bg-[#233D30] hover:text-white text-[#233D30] dark:bg-[#10B981]/15 dark:border-[#10B981]/40 dark:text-[#4ADE80] dark:hover:bg-[#10B981] dark:hover:text-[#0B0C14] font-mono font-bold text-xs flex items-center justify-center gap-1 cursor-pointer transition-all shadow-xs"
                   >
                     <Plus className="w-3.5 h-3.5" /> 1
                   </button>
                   <button
                     disabled={scoreLoading}
                     onClick={() => handleAdjustScore("ADD", 2)}
-                    className="py-2 rounded-lg border border-[#233D30]/30 bg-[#EEF5F1] hover:bg-[#233D30] hover:text-white text-[#233D30] font-mono font-bold text-xs flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                    className="py-2.5 rounded-xl border border-[#233D30]/40 bg-[#EEF5F1] hover:bg-[#233D30] hover:text-white text-[#233D30] dark:bg-[#10B981]/15 dark:border-[#10B981]/40 dark:text-[#4ADE80] dark:hover:bg-[#10B981] dark:hover:text-[#0B0C14] font-mono font-bold text-xs flex items-center justify-center gap-1 cursor-pointer transition-all shadow-xs"
                   >
                     <Plus className="w-3.5 h-3.5" /> 2
                   </button>
                   <button
                     disabled={scoreLoading}
                     onClick={() => handleAdjustScore("SUBTRACT", 1)}
-                    className="py-2 rounded-lg border border-[#8C2929]/30 bg-[#FAF0F0] hover:bg-[#8C2929] hover:text-white text-[#8C2929] font-mono font-bold text-xs flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                    className="py-2.5 rounded-xl border border-[#8C2929]/40 bg-[#FAF0F0] hover:bg-[#8C2929] hover:text-white text-[#8C2929] dark:bg-[#EF4444]/15 dark:border-[#EF4444]/40 dark:text-[#F87171] dark:hover:bg-[#EF4444] dark:hover:text-white font-mono font-bold text-xs flex items-center justify-center gap-1 cursor-pointer transition-all shadow-xs"
                   >
                     <Minus className="w-3.5 h-3.5" /> 1
                   </button>
                   <button
                     disabled={scoreLoading}
                     onClick={() => handleAdjustScore("SUBTRACT", 2)}
-                    className="py-2 rounded-lg border border-[#8C2929]/30 bg-[#FAF0F0] hover:bg-[#8C2929] hover:text-white text-[#8C2929] font-mono font-bold text-xs flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                    className="py-2.5 rounded-xl border border-[#8C2929]/40 bg-[#FAF0F0] hover:bg-[#8C2929] hover:text-white text-[#8C2929] dark:bg-[#EF4444]/15 dark:border-[#EF4444]/40 dark:text-[#F87171] dark:hover:bg-[#EF4444] dark:hover:text-white font-mono font-bold text-xs flex items-center justify-center gap-1 cursor-pointer transition-all shadow-xs"
                   >
                     <Minus className="w-3.5 h-3.5" /> 2
                   </button>
@@ -726,8 +723,8 @@ export default function MembersAdminPage() {
               </div>
 
               {/* Set Exact Score */}
-              <div className="pt-2 border-t border-[#E4E0D5]">
-                <label className="block text-xs font-semibold text-[#252922] mb-1.5">
+              <div className="pt-2 border-t border-[#E4E0D5] dark:border-[#262A42]">
+                <label className="block text-xs font-semibold text-[#252922] dark:text-white mb-1.5">
                   {language === "ar" ? "أو تعيين القيمة مباشرة (Set to):" : "Or set exact value:"}
                 </label>
                 <div className="flex gap-2">
@@ -737,7 +734,7 @@ export default function MembersAdminPage() {
                     value={scoreVal}
                     onChange={(e) => setScoreVal(e.target.value)}
                     placeholder="مثال: 4"
-                    className="w-full text-xs py-2 px-3 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] text-[#252922] font-mono font-bold"
+                    className="w-full text-xs py-2 px-3 rounded-lg border border-[#E4E0D5] dark:border-[#2B304C] bg-[#F7F6F1] dark:bg-[#161828] text-[#252922] dark:text-white font-mono font-bold"
                   />
                   <button
                     disabled={scoreLoading || !scoreVal}
