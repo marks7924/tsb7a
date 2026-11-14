@@ -95,7 +95,7 @@ export function MemberSearchSelect({
                   {selectedMember.fullName}
                 </span>
                 <span className="text-[11px] text-[#77786F] dark:text-[#94A3B8] font-mono block">
-                  {selectedMember.phone}
+                  {selectedMember.phone || "—"}
                 </span>
               </div>
             </div>
@@ -210,7 +210,7 @@ export function MemberSearchSelect({
                               isSelected ? "text-white/80" : "text-[#77786F] dark:text-[#94A3B8]"
                             }`}
                           >
-                            {m.phone}
+                            {m.phone || (language === "ar" ? "بدون هاتف" : "No phone")}
                           </span>
                         </div>
                       </div>

@@ -51,7 +51,7 @@ export default function RewardsAdminPage() {
   const filtered = allRewards.filter(
     (r) =>
       r.memberName.toLowerCase().includes(search.toLowerCase().trim()) ||
-      r.memberPhone.includes(search.trim())
+      Boolean(r.memberPhone && r.memberPhone.includes(search.trim()))
   );
 
   return (
@@ -120,7 +120,7 @@ export default function RewardsAdminPage() {
                           {r.memberName}
                         </td>
                         <td className="py-3 px-4 font-mono text-xs text-[#77786F]">
-                          {r.memberPhone}
+                          {r.memberPhone || "—"}
                         </td>
                         <td className="py-3 px-4 text-center">
                           <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#FAF5EA] text-[#B58A3A] border border-[#B58A3A]/30">
@@ -135,8 +135,8 @@ export default function RewardsAdminPage() {
                         <td className="py-3 px-4 text-center">
                           <span
                             className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md ${isDelivered
-                                ? "bg-[#EEF5F1] text-[#233D30] border border-[#233D30]/20"
-                                : "bg-[#FAF5EA] text-[#B58A3A] border border-[#B58A3A]/30"
+                              ? "bg-[#EEF5F1] text-[#233D30] border border-[#233D30]/20"
+                              : "bg-[#FAF5EA] text-[#B58A3A] border border-[#B58A3A]/30"
                               }`}
                           >
                             {t(`statuses.${r.status}`)}

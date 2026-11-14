@@ -42,12 +42,15 @@ export async function POST(req: Request) {
 
     // Temporary feature: allow phone number as password (username = password)
     const cleanPassword = password.trim();
+    const memberPhone = account.member.phone;
     const isPhoneMatch =
-      cleanPassword === rawInput.trim() ||
-      cleanPassword === account.member.phone ||
-      cleanPassword === account.member.phone.replace("+2", "") ||
-      cleanPassword === "0" + account.member.phone.replace("+20", "") ||
-      normalizePhoneNumber(cleanPassword) === account.member.phone;
+      Boolean(memberPhone) && (
+        cleanPassword === rawInput.trim() ||
+        cleanPassword === memberPhone ||
+        cleanPassword === memberPhone!.replace("+2", "") ||
+        cleanPassword === "0" + memberPhone!.replace("+20", "") ||
+        normalizePhoneNumber(cleanPassword) === memberPhone
+      );
 
     if (!isMatch && !isPhoneMatch) {
       return NextResponse.json({ error: "INVALID_CREDENTIALS" }, { status: 401 });

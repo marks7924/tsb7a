@@ -269,6 +269,9 @@ export async function adminGenerateNewPassword(
 
   let plainPassword = "";
   if (passwordType === "PHONE") {
+    if (!targetMember.phone) {
+      throw new Error("MEMBER_HAS_NO_PHONE");
+    }
     // Phone password (local digits e.g. 01203345435 or normalized)
     plainPassword = targetMember.phone.startsWith("+20")
       ? "0" + targetMember.phone.slice(3)
@@ -281,7 +284,7 @@ export async function adminGenerateNewPassword(
 
   const passwordHash = await hashPassword(plainPassword);
 
-  let loginIdentifier = targetMember.loginAccount?.email;
+  let loginIdentifier: string | null | undefined = targetMember.loginAccount?.email;
 
   if (targetMember.loginAccount) {
     await prisma.account.update({
@@ -294,11 +297,15 @@ export async function adminGenerateNewPassword(
     });
   } else {
     // If the member is "كشف فقط" (Roster only), automatically create their login account now!
-    loginIdentifier = targetMember.email || targetMember.phone;
+    const identifier = targetMember.email || targetMember.phone;
+    if (!identifier) {
+      throw new Error("PHONE_REQUIRED_FOR_ACCOUNT");
+    }
+    loginIdentifier = identifier;
     await prisma.account.create({
       data: {
         memberId: targetMember.id,
-        email: loginIdentifier,
+        email: identifier,
         passwordHash,
         status: "ACTIVE",
       },

@@ -30,7 +30,7 @@ export default function StreakResetsAdminPage() {
       const res = await fetch("/api/streak-resets");
       const json = await res.json();
       setRequests(json.requests || []);
-    } catch {}
+    } catch { }
     setLoading(false);
   };
 
@@ -111,16 +111,15 @@ export default function StreakResetsAdminPage() {
                           {req.member.fullName}
                         </h4>
                         <span className="text-[11px] text-[#77786F] font-mono">
-                          {req.member.phone}
+                          {req.member.phone || "—"}
                         </span>
                         <span
-                          className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md ${
-                            isPending
+                          className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md ${isPending
                               ? "bg-[#FAF5EA] text-[#B58A3A] border border-[#B58A3A]/30"
                               : isApproved
-                              ? "bg-[#FAF0F0] text-[#8C2929] border border-[#8C2929]/20"
-                              : "bg-[#EEF5F1] text-[#233D30] border border-[#233D30]/20"
-                          }`}
+                                ? "bg-[#FAF0F0] text-[#8C2929] border border-[#8C2929]/20"
+                                : "bg-[#EEF5F1] text-[#233D30] border border-[#233D30]/20"
+                            }`}
                         >
                           {t(`statuses.${req.status}`)}
                         </span>

@@ -214,7 +214,7 @@ export default function MergeAccountsPage() {
                     <h4 className="text-sm font-bold text-[#252922]">
                       {preview.survivingMember.fullName}
                     </h4>
-                    <p className="text-xs text-[#77786F] font-mono">{preview.survivingMember.phone}</p>
+                    <p className="text-xs text-[#77786F] font-mono">{preview.survivingMember.phone || "—"}</p>
                     <div className="pt-2 text-xs text-[#252922] space-y-0.5 font-mono">
                       <p>
                         {language === "ar" ? "الحضور المسجل:" : "Attendance:"}{" "}
@@ -237,7 +237,7 @@ export default function MergeAccountsPage() {
                     <h4 className="text-sm font-bold text-[#252922]">
                       {preview.duplicateMember.fullName}
                     </h4>
-                    <p className="text-xs text-[#77786F] font-mono">{preview.duplicateMember.phone}</p>
+                    <p className="text-xs text-[#77786F] font-mono">{preview.duplicateMember.phone || "—"}</p>
                     <div className="pt-2 text-xs text-[#252922] space-y-0.5 font-mono">
                       <p>
                         {language === "ar" ? "الحضور المسجل:" : "Attendance:"}{" "}

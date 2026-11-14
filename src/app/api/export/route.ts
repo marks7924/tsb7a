@@ -29,7 +29,7 @@ export async function GET(req: Request) {
       rows = members.map((m) => [
         m.id,
         m.fullName,
-        m.phone,
+        m.phone || "",
         m.role,
         m.stats?.currentStreak || 0,
         m.stats?.longestStreak || 0,

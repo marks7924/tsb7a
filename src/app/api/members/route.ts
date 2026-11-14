@@ -13,7 +13,7 @@ export async function GET(req: Request) {
     }
 
     const { searchParams } = new URL(req.url);
-    const search = searchParams.get("search")?.toLowerCase().trim();
+    const search = searchParams.get("search")?.trim();
 
     const where: any = {
       status: { not: "MERGED" }, // Hide archived/merged from primary list
@@ -21,9 +21,9 @@ export async function GET(req: Request) {
 
     if (search) {
       where.OR = [
-        { fullName: { contains: search } },
+        { fullName: { contains: search, mode: "insensitive" } },
         { phone: { contains: search } },
-        { email: { contains: search } },
+        { email: { contains: search, mode: "insensitive" } },
       ];
     }
 
@@ -241,26 +241,32 @@ export async function POST(req: Request) {
       const { targetMemberId, fullName, phone, role, gender } = body;
       const targetMember = await prisma.member.findUnique({
         where: { id: targetMemberId },
+        include: { loginAccount: true },
       });
 
       if (!targetMember) {
         return NextResponse.json({ error: "MEMBER_NOT_FOUND" }, { status: 404 });
       }
 
-      const { normalizePhoneNumber, isValidPhone } = await import("@/lib/phone");
-      const normalizedPhone = normalizePhoneNumber(phone || targetMember.phone);
+      let normalizedPhone: string | null = null;
+      const rawPhone = phone !== undefined ? phone.trim() : (targetMember.phone || "");
 
-      if (!isValidPhone(normalizedPhone)) {
-        return NextResponse.json({ error: "INVALID_PHONE" }, { status: 400 });
-      }
+      if (rawPhone.length > 0) {
+        const { normalizePhoneNumber, isValidPhone } = await import("@/lib/phone");
+        normalizedPhone = normalizePhoneNumber(rawPhone);
 
-      // Check phone collision
-      if (normalizedPhone !== targetMember.phone) {
-        const phoneOwner = await prisma.member.findUnique({
-          where: { phone: normalizedPhone },
-        });
-        if (phoneOwner && phoneOwner.id !== targetMember.id) {
-          return NextResponse.json({ error: "PHONE_EXISTS" }, { status: 400 });
+        if (!isValidPhone(normalizedPhone)) {
+          return NextResponse.json({ error: "INVALID_PHONE" }, { status: 400 });
+        }
+
+        // Check phone collision
+        if (normalizedPhone !== targetMember.phone) {
+          const phoneOwner = await prisma.member.findUnique({
+            where: { phone: normalizedPhone },
+          });
+          if (phoneOwner && phoneOwner.id !== targetMember.id) {
+            return NextResponse.json({ error: "PHONE_EXISTS" }, { status: 400 });
+          }
         }
       }
 
@@ -276,9 +282,18 @@ export async function POST(req: Request) {
           fullName: fullName ? fullName.trim() : targetMember.fullName,
           phone: normalizedPhone,
           role: role || targetMember.role,
+          ...(gender ? { gender } : {}),
           updatedAt: new Date(),
         },
       });
+
+      // If member has an account and phone was updated, update account email identifier if needed
+      if (targetMember.loginAccount && normalizedPhone && (!targetMember.phone || targetMember.loginAccount.email === targetMember.phone)) {
+        await prisma.account.update({
+          where: { id: targetMember.loginAccount.id },
+          data: { email: normalizedPhone },
+        });
+      }
 
       await logActivity({
         actorId: user.memberId,

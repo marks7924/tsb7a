@@ -542,26 +542,46 @@ export async function recordMemberAttendanceViaQRScan(params: {
 
 export async function quickAddMemberToAttendance(params: {
   fullName: string;
-  phone: string;
+  phone?: string | null;
+  gender?: "MALE" | "FEMALE";
   sessionId?: string;
   markPresent?: boolean;
   actorId?: string;
   actorName?: string;
   actorRole?: string;
 }) {
-  const { normalizePhoneNumber } = await import("../phone");
-  const normalized = normalizePhoneNumber(params.phone);
+  const { normalizePhoneNumber, isValidPhone } = await import("../phone");
+  const { getRandomAvatarForGender } = await import("../avatars");
+
+  const rawPhone = (params.phone || "").trim();
+  let normalized: string | null = null;
+
+  if (rawPhone.length > 0) {
+    normalized = normalizePhoneNumber(rawPhone);
+    if (!isValidPhone(normalized)) {
+      throw new Error("INVALID_EGYPTIAN_PHONE");
+    }
+  }
+
+  const assignedGender: "MALE" | "FEMALE" = params.gender === "FEMALE" ? "FEMALE" : "MALE";
+  const randomAvatar = getRandomAvatarForGender(assignedGender);
 
   const member = await prisma.$transaction(async (tx) => {
-    let m = await tx.member.findUnique({
-      where: { phone: normalized },
-    });
+    let m = null;
+
+    if (normalized) {
+      m = await tx.member.findUnique({
+        where: { phone: normalized },
+      });
+    }
 
     if (!m) {
       m = await tx.member.create({
         data: {
           fullName: params.fullName.trim(),
           phone: normalized,
+          gender: assignedGender,
+          avatarUrl: randomAvatar.url,
           role: "MEMBER",
           status: "ACTIVE",
           createdById: params.actorId,
@@ -573,6 +593,17 @@ export async function quickAddMemberToAttendance(params: {
           memberId: m.id,
         },
       });
+    } else {
+      // If member exists but has no avatar or gender, update it
+      if (!m.avatarUrl || !m.gender) {
+        m = await tx.member.update({
+          where: { id: m.id },
+          data: {
+            avatarUrl: m.avatarUrl || randomAvatar.url,
+            gender: m.gender || assignedGender,
+          },
+        });
+      }
     }
 
     if (params.sessionId && params.markPresent) {

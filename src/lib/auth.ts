@@ -12,7 +12,7 @@ export interface SessionPayload {
   role: "MEMBER" | "MODERATOR" | "ADMIN" | "DEVELOPER";
   fullName: string;
   email: string;
-  phone: string;
+  phone: string | null;
   avatarUrl?: string | null;
 }
 

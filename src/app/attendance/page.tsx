@@ -48,6 +48,7 @@ export default function AttendancePage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [newFullName, setNewFullName] = useState("");
   const [newPhone, setNewPhone] = useState("");
+  const [newGender, setNewGender] = useState<"MALE" | "FEMALE">("MALE");
   const [markPresentOnAdd, setMarkPresentOnAdd] = useState(true);
   const [addLoading, setAddLoading] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
@@ -261,6 +262,7 @@ export default function AttendancePage() {
           action: "quick-add",
           fullName: newFullName.trim(),
           phone: newPhone.trim(),
+          gender: newGender,
           sessionId: selectedSessionId,
           markPresent: markPresentOnAdd,
         }),
@@ -272,6 +274,7 @@ export default function AttendancePage() {
       setShowAddModal(false);
       setNewFullName("");
       setNewPhone("");
+      setNewGender("MALE");
       showToast(
         language === "ar" ? "تمت إضافة المخدوم وتحديث الكشف بنجاح" : "Member added successfully"
       );
@@ -317,7 +320,7 @@ export default function AttendancePage() {
   const filteredMembers = members.filter((m) => {
     const matchesSearch =
       m.fullName.toLowerCase().includes(search.toLowerCase().trim()) ||
-      m.phone.includes(search.trim());
+      Boolean(m.phone && m.phone.includes(search.trim()));
 
     if (!matchesSearch) return false;
     if (filter === "ALL") return true;
@@ -566,7 +569,7 @@ export default function AttendancePage() {
                             </div>
                           </td>
                           <td className="py-3 px-4 font-mono text-xs text-[#77786F] dark:text-[#94A3B8]">
-                            {m.phone}
+                            {m.phone || "—"}
                           </td>
                           <td className="py-3 px-4 text-center font-mono">
                             <span className="font-bold text-[#B58A3A] dark:text-[#F59E0B]">
@@ -656,7 +659,9 @@ export default function AttendancePage() {
                           />
                           <div>
                             <h4 className="font-bold text-xs text-[#252922] dark:text-white">{cleanName}</h4>
-                            <span className="text-[11px] text-[#77786F] dark:text-[#94A3B8] font-mono">{m.phone}</span>
+                            <span className="text-[11px] text-[#77786F] dark:text-[#94A3B8] font-mono">
+                              {m.phone || (language === "ar" ? "بدون هاتف" : "No phone")}
+                            </span>
                           </div>
                         </div>
                         <span className="text-xs font-mono font-bold text-[#B58A3A] dark:text-[#F59E0B]">
@@ -848,10 +853,10 @@ export default function AttendancePage() {
               </div>
             )}
 
-            <form onSubmit={handleQuickAdd} className="space-y-3">
+            <form onSubmit={handleQuickAdd} className="space-y-3.5">
               <div>
                 <label className="block text-xs font-semibold text-[#252922] mb-1">
-                  {t("common.name")}
+                  {t("common.name")} *
                 </label>
                 <input
                   type="text"
@@ -863,18 +868,58 @@ export default function AttendancePage() {
                 />
               </div>
 
+              {/* Gender Selection for random avatar */}
               <div>
-                <label className="block text-xs font-semibold text-[#252922] mb-1">
-                  {t("common.phone")}
+                <label className="block text-xs font-semibold text-[#252922] mb-1.5">
+                  {language === "ar" ? "النوع (لتحديد الصورة الرمزية تلقائياً)" : "Gender (For profile picture)"}
                 </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setNewGender("MALE")}
+                    className={`py-2 px-3 rounded-lg border text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${newGender === "MALE"
+                        ? "border-[#233D30] bg-[#EEF5F1] text-[#233D30] shadow-xs"
+                        : "border-[#E4E0D5] bg-[#F7F6F1] text-[#77786F] hover:bg-[#EFEDE5]"
+                      }`}
+                  >
+                    <span className="text-base">👦</span>
+                    <span>{language === "ar" ? "ولد (ذكر)" : "Male (Boy)"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNewGender("FEMALE")}
+                    className={`py-2 px-3 rounded-lg border text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${newGender === "FEMALE"
+                        ? "border-[#B58A3A] bg-[#FAF5EA] text-[#B58A3A] shadow-xs"
+                        : "border-[#E4E0D5] bg-[#F7F6F1] text-[#77786F] hover:bg-[#EFEDE5]"
+                      }`}
+                  >
+                    <span className="text-base">👧</span>
+                    <span>{language === "ar" ? "بنت (أنثى)" : "Female (Girl)"}</span>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-semibold text-[#252922]">
+                    {t("common.phone")}
+                  </label>
+                  <span className="text-[10px] font-medium text-[#77786F] bg-[#EFEDE5] px-1.5 py-0.5 rounded-sm">
+                    {language === "ar" ? "اختياري" : "Optional"}
+                  </span>
+                </div>
                 <input
                   type="tel"
-                  required
                   value={newPhone}
                   onChange={(e) => setNewPhone(e.target.value)}
                   placeholder="01012345678"
                   className="w-full text-xs p-2.5 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] font-mono focus:bg-white focus:outline-hidden"
                 />
+                <p className="text-[11px] text-[#77786F] mt-1 leading-tight">
+                  {language === "ar"
+                    ? "💡 في حال عدم إدخال الهاتف، لن يتمكن المخدوم من تسجيل الدخول إلا بعد قيام الخادم بإضافة رقم هاتفه من سجل المخدومين."
+                    : "💡 Without a phone number, this member cannot log in until an admin adds their phone number in Member Directory."}
+                </p>
               </div>
 
               <div className="flex items-center gap-2 pt-1">

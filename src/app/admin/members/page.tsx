@@ -90,7 +90,9 @@ export default function MembersAdminPage() {
   const fetchMembers = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/members?search=${encodeURIComponent(search)}`);
+      const res = await fetch(`/api/members?search=${encodeURIComponent(search)}`, {
+        cache: "no-store",
+      });
       const json = await res.json();
       setMembers(json.members || []);
     } catch { }
@@ -296,147 +298,309 @@ export default function MembersAdminPage() {
               {t("common.noData")}
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-right ltr:text-left text-xs">
-                <thead>
-                  <tr className="border-b border-[#E4E0D5] dark:border-[#232740] bg-[#EFEDE5]/80 dark:bg-[#161828] text-[11px] font-bold text-[#77786F] dark:text-[#94A3B8] uppercase tracking-wider">
-                    <th className="py-3 px-4">{t("common.name")}</th>
-                    <th className="py-3 px-4">{t("common.phone")}</th>
-                    <th className="py-3 px-4">{t("common.role")}</th>
-                    <th className="py-3 px-4 text-center">
-                      {language === "ar" ? "حساب الدخول" : "Account Status"}
-                    </th>
-                    <th className="py-3 px-4 text-center">{t("streaks.currentStreak")}</th>
-                    <th className="py-3 px-4 text-center">{t("streaks.allTimeAttendance")}</th>
-                    <th className="py-3 px-4 text-center">{t("common.actions")}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#E4E0D5]/70 dark:divide-[#232740]">
-                  {members.map((m) => {
-                    const hasAccount = !!m.loginAccount;
+            <>
+              {/* Desktop Ledger Table (md and up) */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full text-right ltr:text-left text-xs">
+                  <thead>
+                    <tr className="border-b border-[#E4E0D5] dark:border-[#232740] bg-[#EFEDE5]/80 dark:bg-[#161828] text-[11px] font-bold text-[#77786F] dark:text-[#94A3B8] uppercase tracking-wider">
+                      <th className="py-3 px-4">{t("common.name")}</th>
+                      <th className="py-3 px-4">{t("common.phone")}</th>
+                      <th className="py-3 px-4">{t("common.role")}</th>
+                      <th className="py-3 px-4 text-center">
+                        {language === "ar" ? "حساب الدخول" : "Account Status"}
+                      </th>
+                      <th className="py-3 px-4 text-center">{t("streaks.currentStreak")}</th>
+                      <th className="py-3 px-4 text-center">{t("streaks.allTimeAttendance")}</th>
+                      <th className="py-3 px-4 text-center">{t("common.actions")}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#E4E0D5]/70 dark:divide-[#232740]">
+                    {members.map((m) => {
+                      const hasAccount = !!m.loginAccount;
 
-                    return (
-                      <tr key={m.id} className="hover:bg-[#FAF5EA]/40 dark:hover:bg-[#1A1D30] transition-colors">
-                        <td className="py-3 px-4 font-bold text-xs text-[#252922] dark:text-white">
-                          <div className="flex items-center gap-2.5">
-                            <MemberAvatar
-                              memberId={m.id}
-                              avatarUrl={m.avatarUrl}
-                              fullName={m.fullName}
-                              size="sm"
-                            />
-                            <span className="text-[#252922] dark:text-white font-bold">{m.fullName}</span>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4 font-mono text-xs text-[#77786F] dark:text-[#94A3B8]">
-                          {m.phone}
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#EFEDE5] text-[#233D30] border border-[#E4E0D5]">
-                            {m.role === "DEVELOPER" && currentUser?.role !== "DEVELOPER"
-                              ? t("roles.ADMIN")
-                              : t(`roles.${m.role}`)}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-center">
-                          {hasAccount ? (
-                            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#EEF5F1] text-[#233D30]">
-                              <UserCheck className="w-3 h-3 stroke-[2.5]" />
-                              {language === "ar" ? "مرتبط" : "Linked"}
+                      return (
+                        <tr key={m.id} className="hover:bg-[#FAF5EA]/40 dark:hover:bg-[#1A1D30] transition-colors">
+                          <td className="py-3 px-4 font-bold text-xs text-[#252922] dark:text-white">
+                            <div className="flex items-center gap-2.5">
+                              <MemberAvatar
+                                memberId={m.id}
+                                avatarUrl={m.avatarUrl}
+                                fullName={m.fullName}
+                                size="sm"
+                              />
+                              <span className="text-[#252922] dark:text-white font-bold">{m.fullName}</span>
+                            </div>
+                          </td>
+                          <td className="py-3 px-4 font-mono text-xs text-[#77786F] dark:text-[#94A3B8]">
+                            {m.phone ? (
+                              m.phone
+                            ) : (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-[#FAF5EA] text-[#B58A3A] dark:bg-[#FAF5EA]/10 border border-[#B58A3A]/20">
+                                <AlertCircle className="w-3 h-3" />
+                                {language === "ar" ? "بدون هاتف" : "No phone"}
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-3 px-4">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#EFEDE5] dark:bg-[#1E2235] text-[#233D30] dark:text-[#A7F3D0] border border-[#E4E0D5] dark:border-[#2D334D]">
+                              {m.role === "DEVELOPER" && currentUser?.role !== "DEVELOPER"
+                                ? t("roles.ADMIN")
+                                : t(`roles.${m.role}`)}
                             </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md bg-[#EFEDE5] text-[#77786F]">
-                              <UserX className="w-3 h-3" />
-                              {language === "ar" ? "كشف فقط" : "Sheet Only"}
+                          </td>
+                          <td className="py-3 px-4 text-center">
+                            {hasAccount ? (
+                              <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#EEF5F1] text-[#233D30] dark:bg-[#10B981]/20 dark:text-[#6EE7B7]">
+                                <UserCheck className="w-3 h-3 stroke-[2.5]" />
+                                {language === "ar" ? "مرتبط" : "Linked"}
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md bg-[#EFEDE5] text-[#77786F] dark:bg-[#1E2235] dark:text-[#94A3B8]">
+                                <UserX className="w-3 h-3" />
+                                {language === "ar" ? "كشف فقط" : "Sheet Only"}
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-3 px-4 text-center font-mono text-xs">
+                            <span className="font-bold text-[#B58A3A]">
+                              {m.stats?.currentStreak || 0}
                             </span>
-                          )}
-                        </td>
-                        <td className="py-3 px-4 text-center font-mono text-xs">
-                          <span className="font-bold text-[#B58A3A]">
-                            {m.stats?.currentStreak || 0}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-center font-mono font-bold text-xs text-[#233D30]">
-                          {m.stats?.totalAttendance || 0}
-                        </td>
-                        <td className="py-3 px-4 text-center">
-                          <div className="flex items-center justify-center gap-1.5 flex-wrap">
-                            {/* Quick Score Adjuster */}
-                            <button
-                              onClick={() => {
-                                setScoreTarget(m);
-                                setScoreField("currentStreak");
-                                setScoreVal(String(m.stats?.currentStreak || 0));
-                              }}
-                              title={language === "ar" ? "تعديل السلسلة أو النقاط (+1 / -1 / تحديد)" : "Adjust score/streak"}
-                              className="p-1.5 rounded-lg border border-[#E4E0D5] bg-[#FAF5EA] hover:bg-[#F3EAD3] text-[#B58A3A] transition-colors cursor-pointer"
-                            >
-                              <Flame className="w-4 h-4" />
-                            </button>
-
-                            {/* Avatar Picker / Assign */}
-                            <button
-                              onClick={() => {
-                                setAvatarTarget(m);
-                                setAvatarUrlChoice(m.avatarUrl || null);
-                              }}
-                              title={language === "ar" ? "تغيير الصورة الرمزية" : "Change avatar"}
-                              className="p-1.5 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] hover:bg-[#EFEDE5] text-[#233D30] transition-colors cursor-pointer"
-                            >
-                              <Camera className="w-4 h-4" />
-                            </button>
-
-                            {/* Edit Member Info */}
-                            <button
-                              onClick={() => {
-                                setEditTarget(m);
-                                setEditForm({
-                                  fullName: m.fullName,
-                                  phone: m.phone,
-                                  role: m.role,
-                                });
-                                setEditError(null);
-                              }}
-                              title={language === "ar" ? "تعديل بيانات العضو" : "Edit member details"}
-                              className="p-1.5 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] hover:bg-[#EFEDE5] text-[#252922] transition-colors cursor-pointer"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </button>
-
-                            {/* Password Gen (Admin/Developer only) */}
-                            {(currentUser?.role === "ADMIN" || currentUser?.role === "DEVELOPER") && (
+                          </td>
+                          <td className="py-3 px-4 text-center font-mono font-bold text-xs text-[#233D30] dark:text-[#34D399]">
+                            {m.stats?.totalAttendance || 0}
+                          </td>
+                          <td className="py-3 px-4 text-center">
+                            <div className="flex items-center justify-center gap-1.5 flex-nowrap">
+                              {/* Quick Score Adjuster */}
                               <button
                                 onClick={() => {
-                                  setPwdTarget(m);
-                                  setGeneratedPassword(null);
-                                  setPwdError(null);
+                                  setScoreTarget(m);
+                                  setScoreField("currentStreak");
+                                  setScoreVal(String(m.stats?.currentStreak || 0));
                                 }}
-                                title={hasAccount ? (language === "ar" ? "إعادة تعيين كلمة السر" : "Reset password") : (language === "ar" ? "توليد كلمة سر" : "Generate password")}
-                                className="p-1.5 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] hover:bg-[#EFEDE5] text-[#B58A3A] transition-colors cursor-pointer"
+                                title={language === "ar" ? "تعديل السلسلة أو النقاط (+1 / -1 / تحديد)" : "Adjust score/streak"}
+                                className="p-1.5 rounded-lg border border-[#E4E0D5] bg-[#FAF5EA] hover:bg-[#F3EAD3] text-[#B58A3A] transition-colors cursor-pointer"
                               >
-                                <KeyRound className="w-4 h-4" />
+                                <Flame className="w-4 h-4" />
                               </button>
-                            )}
 
-                            {/* Delete Member (Never for Developer; Mod cannot delete Admin) */}
-                            {!(m.role === "DEVELOPER" || m.isDeveloperHidden) &&
-                              !(currentUser?.role === "MODERATOR" && m.role === "ADMIN") && (
+                              {/* Avatar Picker / Assign */}
+                              <button
+                                onClick={() => {
+                                  setAvatarTarget(m);
+                                  setAvatarUrlChoice(m.avatarUrl || null);
+                                }}
+                                title={language === "ar" ? "تغيير الصورة الرمزية" : "Change avatar"}
+                                className="p-1.5 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] hover:bg-[#EFEDE5] text-[#233D30] transition-colors cursor-pointer"
+                              >
+                                <Camera className="w-4 h-4" />
+                              </button>
+
+                              {/* Edit Member Info */}
+                              <button
+                                onClick={() => {
+                                  setEditTarget(m);
+                                  setEditForm({
+                                    fullName: m.fullName,
+                                    phone: m.phone || "",
+                                    role: m.role,
+                                  });
+                                  setEditError(null);
+                                }}
+                                title={language === "ar" ? "تعديل بيانات العضو" : "Edit member details"}
+                                className="p-1.5 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] hover:bg-[#EFEDE5] text-[#252922] transition-colors cursor-pointer"
+                              >
+                                <Edit className="w-4 h-4" />
+                              </button>
+
+                              {/* Password Gen (Admin/Developer only) */}
+                              {(currentUser?.role === "ADMIN" || currentUser?.role === "DEVELOPER") && (
                                 <button
-                                  onClick={() => setDeleteTarget(m)}
-                                  title={language === "ar" ? "حذف العضو نهائياً" : "Delete member"}
-                                  className="p-1.5 rounded-lg border border-[#E4E0D5] bg-[#FAF0F0] hover:bg-[#F3D5D5] text-[#8C2929] transition-colors cursor-pointer"
+                                  onClick={() => {
+                                    setPwdTarget(m);
+                                    setGeneratedPassword(null);
+                                    setPwdError(null);
+                                    setPwdMode(m.phone ? "PHONE" : "CUSTOM");
+                                  }}
+                                  title={hasAccount ? (language === "ar" ? "إعادة تعيين كلمة السر" : "Reset password") : (language === "ar" ? "توليد كلمة سر" : "Generate password")}
+                                  className="p-1.5 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] hover:bg-[#EFEDE5] text-[#B58A3A] transition-colors cursor-pointer"
                                 >
-                                  <Trash2 className="w-4 h-4" />
+                                  <KeyRound className="w-4 h-4" />
                                 </button>
                               )}
+
+                              {/* Delete Member (Never for Developer; Mod cannot delete Admin) */}
+                              {!(m.role === "DEVELOPER" || m.isDeveloperHidden) &&
+                                !(currentUser?.role === "MODERATOR" && m.role === "ADMIN") && (
+                                  <button
+                                    onClick={() => setDeleteTarget(m)}
+                                    title={language === "ar" ? "حذف العضو نهائياً" : "Delete member"}
+                                    className="p-1.5 rounded-lg border border-[#E4E0D5] bg-[#FAF0F0] hover:bg-[#F3D5D5] text-[#8C2929] transition-colors cursor-pointer"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Phone Card Ledger (< md) */}
+              <div className="md:hidden divide-y divide-[#E4E0D5]/70 dark:divide-[#232740]">
+                {members.map((m) => {
+                  const hasAccount = !!m.loginAccount;
+
+                  return (
+                    <div
+                      key={m.id}
+                      className="p-4 space-y-3 hover:bg-[#FAF5EA]/30 dark:hover:bg-[#1A1D30]/60 transition-colors"
+                    >
+                      {/* Row 1: Avatar, Name & Badges */}
+                      <div className="flex items-start justify-between gap-2.5">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <MemberAvatar
+                            memberId={m.id}
+                            avatarUrl={m.avatarUrl}
+                            fullName={m.fullName}
+                            size="md"
+                          />
+                          <div className="min-w-0">
+                            <h3 className="font-bold text-sm text-[#252922] dark:text-white truncate">
+                              {m.fullName}
+                            </h3>
+                            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#EFEDE5] dark:bg-[#1E2235] text-[#233D30] dark:text-[#A7F3D0] border border-[#E4E0D5] dark:border-[#2D334D]">
+                                {m.role === "DEVELOPER" && currentUser?.role !== "DEVELOPER"
+                                  ? t("roles.ADMIN")
+                                  : t(`roles.${m.role}`)}
+                              </span>
+                              {hasAccount ? (
+                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-[#EEF5F1] text-[#233D30] dark:bg-[#10B981]/20 dark:text-[#6EE7B7]">
+                                  <UserCheck className="w-3 h-3 stroke-[2.5]" />
+                                  {language === "ar" ? "مرتبط" : "Linked"}
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-[#EFEDE5] text-[#77786F] dark:bg-[#1E2235] dark:text-[#94A3B8]">
+                                  <UserX className="w-3 h-3" />
+                                  {language === "ar" ? "كشف فقط" : "Sheet Only"}
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                        </div>
+
+                        {/* Quick Stats Pill */}
+                        <div className="flex flex-col items-end gap-1 shrink-0 text-xs font-mono">
+                          <span className="font-bold text-[#B58A3A] dark:text-[#FBBF24] bg-[#FAF5EA] dark:bg-[#1E2235] px-2 py-0.5 rounded-md border border-[#E4E0D5] dark:border-[#2D334D] flex items-center gap-1">
+                            <Flame className="w-3 h-3" />
+                            {m.stats?.currentStreak || 0}
+                          </span>
+                          <span className="text-[11px] font-bold text-[#233D30] dark:text-[#34D399] bg-[#EEF5F1] dark:bg-[#1E2235] px-2 py-0.5 rounded-md border border-[#E4E0D5] dark:border-[#2D334D]">
+                            {m.stats?.totalAttendance || 0} {language === "ar" ? "حضور" : "att"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Row 2: Phone */}
+                      <div className="flex items-center justify-between text-xs bg-[#F7F6F1] dark:bg-[#161828] p-2 rounded-lg border border-[#E4E0D5]/70 dark:border-[#232740]">
+                        <span className="text-[11px] font-semibold text-[#77786F] dark:text-[#94A3B8]">
+                          {language === "ar" ? "رقم الهاتف للدخول:" : "Phone:"}
+                        </span>
+                        {m.phone ? (
+                          <span className="font-mono font-bold text-xs text-[#252922] dark:text-white" dir="ltr">
+                            {m.phone}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#B58A3A] dark:text-[#F59E0B]">
+                            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                            {language === "ar" ? "غير مسجل (لا يمكنه الدخول)" : "No phone (Cannot login)"}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Row 3: Touch Actions Toolbar */}
+                      <div className="grid grid-cols-4 sm:grid-cols-5 gap-1.5 pt-1">
+                        {/* Quick Score Adjuster */}
+                        <button
+                          onClick={() => {
+                            setScoreTarget(m);
+                            setScoreField("currentStreak");
+                            setScoreVal(String(m.stats?.currentStreak || 0));
+                          }}
+                          className="py-2 px-1 rounded-lg border border-[#E4E0D5] dark:border-[#2D334D] bg-[#FAF5EA] dark:bg-[#1E2235] hover:bg-[#F3EAD3] text-[#B58A3A] dark:text-[#FBBF24] text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer"
+                        >
+                          <Flame className="w-4 h-4" />
+                          <span>{language === "ar" ? "النقاط" : "Score"}</span>
+                        </button>
+
+                        {/* Avatar Picker */}
+                        <button
+                          onClick={() => {
+                            setAvatarTarget(m);
+                            setAvatarUrlChoice(m.avatarUrl || null);
+                          }}
+                          className="py-2 px-1 rounded-lg border border-[#E4E0D5] dark:border-[#2D334D] bg-[#F7F6F1] dark:bg-[#1E2235] hover:bg-[#EFEDE5] text-[#233D30] dark:text-[#34D399] text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer"
+                        >
+                          <Camera className="w-4 h-4" />
+                          <span>{language === "ar" ? "الصورة" : "Avatar"}</span>
+                        </button>
+
+                        {/* Edit Member Info */}
+                        <button
+                          onClick={() => {
+                            setEditTarget(m);
+                            setEditForm({
+                              fullName: m.fullName,
+                              phone: m.phone || "",
+                              role: m.role,
+                            });
+                            setEditError(null);
+                          }}
+                          className="py-2 px-1 rounded-lg border border-[#E4E0D5] dark:border-[#2D334D] bg-[#F7F6F1] dark:bg-[#1E2235] hover:bg-[#EFEDE5] text-[#252922] dark:text-white text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer"
+                        >
+                          <Edit className="w-4 h-4" />
+                          <span>{language === "ar" ? "تعديل" : "Edit"}</span>
+                        </button>
+
+                        {/* Password Gen (Admin/Developer only) */}
+                        {(currentUser?.role === "ADMIN" || currentUser?.role === "DEVELOPER") && (
+                          <button
+                            onClick={() => {
+                              setPwdTarget(m);
+                              setGeneratedPassword(null);
+                              setPwdError(null);
+                              setPwdMode(m.phone ? "PHONE" : "CUSTOM");
+                            }}
+                            className="py-2 px-1 rounded-lg border border-[#E4E0D5] dark:border-[#2D334D] bg-[#F7F6F1] dark:bg-[#1E2235] hover:bg-[#EFEDE5] text-[#B58A3A] dark:text-[#FBBF24] text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer"
+                          >
+                            <KeyRound className="w-4 h-4" />
+                            <span>{hasAccount ? (language === "ar" ? "كلمة السر" : "Pwd") : (language === "ar" ? "تفعيل" : "Activate")}</span>
+                          </button>
+                        )}
+
+                        {/* Delete Member */}
+                        {!(m.role === "DEVELOPER" || m.isDeveloperHidden) &&
+                          !(currentUser?.role === "MODERATOR" && m.role === "ADMIN") && (
+                            <button
+                              onClick={() => setDeleteTarget(m)}
+                              className="py-2 px-1 rounded-lg border border-[#E4E0D5] dark:border-[#2D334D] bg-[#FAF0F0] dark:bg-[#EF4444]/10 hover:bg-[#F3D5D5] text-[#8C2929] dark:text-[#EF4444] text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 transition-colors cursor-pointer"
+                              title={language === "ar" ? "حذف نهائي" : "Delete"}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              <span>{language === "ar" ? "حذف" : "Del"}</span>
+                            </button>
+                          )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
           )}
         </div>
 
@@ -455,7 +619,9 @@ export default function MembersAdminPage() {
                 </p>
                 <p>
                   <strong className="text-[#252922]">{language === "ar" ? "اسم المستخدم (رقم الهاتف للدخول):" : "Login Username (Phone):"}</strong>{" "}
-                  <span className="font-mono font-bold text-[#233D30]">{pwdTarget.phone}</span>
+                  <span className="font-mono font-bold text-[#233D30]">
+                    {pwdTarget.phone || (language === "ar" ? "⚠️ لا يوجد رقم هاتف (مطلوب للدخول)" : "⚠️ No phone")}
+                  </span>
                 </p>
                 {pwdTarget.loginAccount?.email && (
                   <p>
@@ -504,36 +670,44 @@ export default function MembersAdminPage() {
                     </label>
                     <div className="space-y-2 text-xs">
                       {/* Option 1: Phone Number */}
-                      <label
-                        className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${pwdMode === "PHONE"
+                      {pwdTarget.phone ? (
+                        <label
+                          className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${pwdMode === "PHONE"
                             ? "bg-[#FAF5EA] border-[#B58A3A] ring-1 ring-[#B58A3A]/40"
                             : "bg-[#F7F6F1] border-[#E4E0D5] hover:bg-[#EFEDE5]"
-                          }`}
-                      >
-                        <input
-                          type="radio"
-                          name="pwdMode"
-                          checked={pwdMode === "PHONE"}
-                          onChange={() => setPwdMode("PHONE")}
-                          className="mt-0.5 text-[#B58A3A]"
-                        />
-                        <div>
-                          <span className="font-bold text-[#252922] block">
-                            {language === "ar"
-                              ? "رقم الهاتف ككلمة مرور (موصى به لسهولة الدخول)"
-                              : "Phone number as password (Recommended)"}
-                          </span>
-                          <span className="text-[11px] text-[#77786F] font-mono block mt-0.5">
-                            {pwdTarget.phone.startsWith("+20") ? "0" + pwdTarget.phone.slice(3) : pwdTarget.phone}
-                          </span>
+                            }`}
+                        >
+                          <input
+                            type="radio"
+                            name="pwdMode"
+                            checked={pwdMode === "PHONE"}
+                            onChange={() => setPwdMode("PHONE")}
+                            className="mt-0.5 text-[#B58A3A]"
+                          />
+                          <div>
+                            <span className="font-bold text-[#252922] block">
+                              {language === "ar"
+                                ? "رقم الهاتف ككلمة مرور (موصى به لسهولة الدخول)"
+                                : "Phone number as password (Recommended)"}
+                            </span>
+                            <span className="text-[11px] text-[#77786F] font-mono block mt-0.5">
+                              {pwdTarget.phone.startsWith("+20") ? "0" + pwdTarget.phone.slice(3) : pwdTarget.phone}
+                            </span>
+                          </div>
+                        </label>
+                      ) : (
+                        <div className="p-2.5 rounded-xl border border-[#B58A3A]/40 bg-[#FAF5EA] text-[#B58A3A] text-xs">
+                          {language === "ar"
+                            ? "⚠️ هذا العضو ليس لديه رقم هاتف مسجل. يرجى تعديل بيانات العضو وإضافة رقم هاتفه أولاً ليتمكن من تسجيل الدخول لحسابه."
+                            : "⚠️ This member has no phone number. Please edit the member to add a phone number before activating their account."}
                         </div>
-                      </label>
+                      )}
 
                       {/* Option 2: Custom Password */}
                       <label
                         className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${pwdMode === "CUSTOM"
-                            ? "bg-[#FAF5EA] border-[#B58A3A] ring-1 ring-[#B58A3A]/40"
-                            : "bg-[#F7F6F1] border-[#E4E0D5] hover:bg-[#EFEDE5]"
+                          ? "bg-[#FAF5EA] border-[#B58A3A] ring-1 ring-[#B58A3A]/40"
+                          : "bg-[#F7F6F1] border-[#E4E0D5] hover:bg-[#EFEDE5]"
                           }`}
                       >
                         <input
@@ -563,8 +737,8 @@ export default function MembersAdminPage() {
                       {/* Option 3: Strong Random */}
                       <label
                         className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${pwdMode === "RANDOM"
-                            ? "bg-[#FAF5EA] border-[#B58A3A] ring-1 ring-[#B58A3A]/40"
-                            : "bg-[#F7F6F1] border-[#E4E0D5] hover:bg-[#EFEDE5]"
+                          ? "bg-[#FAF5EA] border-[#B58A3A] ring-1 ring-[#B58A3A]/40"
+                          : "bg-[#F7F6F1] border-[#E4E0D5] hover:bg-[#EFEDE5]"
                           }`}
                       >
                         <input
@@ -783,12 +957,17 @@ export default function MembersAdminPage() {
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#252922] mb-1">{t("common.phone")}</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="font-semibold text-[#252922]">{t("common.phone")}</label>
+                    <span className="text-[10px] text-[#77786F] bg-[#EFEDE5] px-1.5 py-0.5 rounded-sm">
+                      {language === "ar" ? "اختياري - مطلوب لتسجيل الدخول" : "Optional - required for login"}
+                    </span>
+                  </div>
                   <input
                     type="text"
-                    required
                     value={editForm.phone}
                     onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                    placeholder="01012345678"
                     className="w-full py-2 px-3 rounded-lg border border-[#E4E0D5] bg-[#F7F6F1] text-[#252922] font-mono focus:bg-white"
                   />
                 </div>

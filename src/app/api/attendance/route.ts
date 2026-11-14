@@ -182,6 +182,7 @@ export async function POST(req: Request) {
       const member = await quickAddMemberToAttendance({
         fullName: body.fullName,
         phone: body.phone,
+        gender: body.gender,
         sessionId: body.sessionId,
         markPresent: body.markPresent,
         actorId: user.memberId,
