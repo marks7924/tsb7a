@@ -36,6 +36,38 @@ export default function MembersAdminPage() {
   const [members, setMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [loginFilter, setLoginFilter] = useState<"ALL" | "LOGGED_IN" | "NOT_LOGGED_IN">("ALL");
+
+  // Helper for human-readable relative time
+  const formatRelativeTime = (dateString?: string | null) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 1) return language === "ar" ? "الآن" : "Just now";
+    if (diffMins < 60) return language === "ar" ? `منذ ${diffMins} دقيقة` : `${diffMins}m ago`;
+    if (diffHours < 24) return language === "ar" ? `منذ ${diffHours} س` : `${diffHours}h ago`;
+    if (diffDays === 1) return language === "ar" ? "أمس" : "Yesterday";
+    if (diffDays < 7) return language === "ar" ? `منذ ${diffDays} أيام` : `${diffDays}d ago`;
+
+    return date.toLocaleDateString(language === "ar" ? "ar-EG" : "en-US", {
+      month: "numeric",
+      day: "numeric",
+    });
+  };
+
+  const loggedInCount = members.filter((m) => Boolean(m.loginAccount?.lastLogin)).length;
+  const notLoggedInCount = members.filter((m) => !m.loginAccount?.lastLogin).length;
+
+  const filteredMembers = members.filter((m) => {
+    if (loginFilter === "LOGGED_IN") return Boolean(m.loginAccount?.lastLogin);
+    if (loginFilter === "NOT_LOGGED_IN") return !m.loginAccount?.lastLogin;
+    return true;
+  });
 
   // Password Generation Modal State
   const [pwdTarget, setPwdTarget] = useState<any | null>(null);
@@ -287,13 +319,69 @@ export default function MembersAdminPage() {
           </div>
         </div>
 
+        {/* Toolbar & Filter Tabs */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          {/* Login Status Filter Capsule Tabs */}
+          <div className="bg-[#EFEDE5] dark:bg-[#121422] p-1 rounded-xl border border-[#E4E0D5] dark:border-[#232740] flex items-center gap-1 w-full sm:w-auto shadow-inner text-xs">
+            <button
+              onClick={() => setLoginFilter("ALL")}
+              className={`flex-1 sm:flex-initial px-3.5 py-1.5 rounded-lg font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                loginFilter === "ALL"
+                  ? "bg-white dark:bg-[#1E2238] text-[#252922] dark:text-white shadow-xs"
+                  : "text-[#77786F] dark:text-[#94A3B8] hover:text-[#252922] dark:hover:text-white"
+              }`}
+            >
+              <span>{language === "ar" ? "كل الأعضاء" : "All Members"}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-[#EFEDE5] dark:bg-[#252940]">
+                {members.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setLoginFilter("LOGGED_IN")}
+              className={`flex-1 sm:flex-initial px-3.5 py-1.5 rounded-lg font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                loginFilter === "LOGGED_IN"
+                  ? "bg-white dark:bg-[#1E2238] text-[#233D30] dark:text-[#34D399] shadow-xs"
+                  : "text-[#77786F] dark:text-[#94A3B8] hover:text-[#252922] dark:hover:text-white"
+              }`}
+            >
+              <span className="w-2 h-2 rounded-full bg-[#10B981]"></span>
+              <span>{language === "ar" ? "مسجل دخول" : "Logged In"}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-[#EEF5F1] text-[#233D30] dark:bg-[#10B981]/20 dark:text-[#34D399]">
+                {loggedInCount}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setLoginFilter("NOT_LOGGED_IN")}
+              className={`flex-1 sm:flex-initial px-3.5 py-1.5 rounded-lg font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                loginFilter === "NOT_LOGGED_IN"
+                  ? "bg-white dark:bg-[#1E2238] text-[#B58A3A] dark:text-[#FBBF24] shadow-xs"
+                  : "text-[#77786F] dark:text-[#94A3B8] hover:text-[#252922] dark:hover:text-white"
+              }`}
+            >
+              <span className="w-2 h-2 rounded-full bg-[#F59E0B]"></span>
+              <span>{language === "ar" ? "لم يسجل دخول" : "Not Logged In"}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-[#FAF5EA] text-[#B58A3A] dark:bg-[#F59E0B]/20 dark:text-[#FBBF24]">
+                {notLoggedInCount}
+              </span>
+            </button>
+          </div>
+
+          <div className="text-xs text-[#77786F] dark:text-[#94A3B8]">
+            {language === "ar"
+              ? `عرض ${filteredMembers.length} من أصل ${members.length}`
+              : `Showing ${filteredMembers.length} of ${members.length}`}
+          </div>
+        </div>
+
         {/* Member Directory Ledger */}
         <div className="bg-white dark:bg-[#121422] rounded-xl border border-[#E4E0D5] dark:border-[#232740] shadow-xs overflow-hidden">
           {loading ? (
             <div className="text-center py-16 text-[#77786F] dark:text-[#94A3B8] text-xs">
               {t("common.loading")}
             </div>
-          ) : members.length === 0 ? (
+          ) : filteredMembers.length === 0 ? (
             <div className="text-center py-16 text-[#77786F] dark:text-[#94A3B8] text-xs">
               {t("common.noData")}
             </div>
@@ -316,8 +404,9 @@ export default function MembersAdminPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#E4E0D5]/70 dark:divide-[#232740]">
-                    {members.map((m) => {
+                    {filteredMembers.map((m) => {
                       const hasAccount = !!m.loginAccount;
+                      const hasLoggedIn = Boolean(m.loginAccount?.lastLogin);
 
                       return (
                         <tr key={m.id} className="hover:bg-[#FAF5EA]/40 dark:hover:bg-[#1A1D30] transition-colors">
@@ -350,16 +439,39 @@ export default function MembersAdminPage() {
                             </span>
                           </td>
                           <td className="py-3 px-4 text-center">
-                            {hasAccount ? (
-                              <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#EEF5F1] text-[#233D30] dark:bg-[#10B981]/20 dark:text-[#6EE7B7]">
-                                <UserCheck className="w-3 h-3 stroke-[2.5]" />
-                                {language === "ar" ? "مرتبط" : "Linked"}
-                              </span>
+                            {hasLoggedIn ? (
+                              <div className="flex flex-col items-center">
+                                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#EEF5F1] text-[#233D30] dark:bg-[#10B981]/20 dark:text-[#34D399] border border-[#233D30]/20">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+                                  {language === "ar" ? "مسجل دخول" : "Logged In"}
+                                </span>
+                                <span
+                                  className="text-[10px] text-[#77786F] dark:text-[#94A3B8] font-mono mt-0.5"
+                                  title={new Date(m.loginAccount.lastLogin).toLocaleString(language === "ar" ? "ar-EG" : "en-US")}
+                                >
+                                  {formatRelativeTime(m.loginAccount.lastLogin)}
+                                </span>
+                              </div>
+                            ) : hasAccount ? (
+                              <div className="flex flex-col items-center">
+                                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#FAF5EA] text-[#B58A3A] dark:bg-[#F59E0B]/20 dark:text-[#FBBF24] border border-[#B58A3A]/20">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]"></span>
+                                  {language === "ar" ? "لم يدخل بعد" : "Never Logged In"}
+                                </span>
+                                <span className="text-[10px] text-[#77786F] dark:text-[#94A3B8] mt-0.5">
+                                  {language === "ar" ? "حساب جاهز" : "Account Ready"}
+                                </span>
+                              </div>
                             ) : (
-                              <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md bg-[#EFEDE5] text-[#77786F] dark:bg-[#1E2235] dark:text-[#94A3B8]">
-                                <UserX className="w-3 h-3" />
-                                {language === "ar" ? "كشف فقط" : "Sheet Only"}
-                              </span>
+                              <div className="flex flex-col items-center">
+                                <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md bg-[#EFEDE5] text-[#77786F] dark:bg-[#1E2235] dark:text-[#94A3B8]">
+                                  <UserX className="w-3 h-3" />
+                                  {language === "ar" ? "كشف فقط" : "Sheet Only"}
+                                </span>
+                                <span className="text-[10px] text-[#77786F] dark:text-[#94A3B8] mt-0.5">
+                                  {language === "ar" ? "بدون حساب" : "No Account"}
+                                </span>
+                              </div>
                             )}
                           </td>
                           <td className="py-3 px-4 text-center font-mono text-xs">
@@ -452,7 +564,7 @@ export default function MembersAdminPage() {
 
               {/* Mobile Phone Card Ledger (< md) */}
               <div className="md:hidden divide-y divide-[#E4E0D5]/70 dark:divide-[#232740]">
-                {members.map((m) => {
+                {filteredMembers.map((m) => {
                   const hasAccount = !!m.loginAccount;
 
                   return (
@@ -479,10 +591,21 @@ export default function MembersAdminPage() {
                                   ? t("roles.ADMIN")
                                   : t(`roles.${m.role}`)}
                               </span>
-                              {hasAccount ? (
-                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-[#EEF5F1] text-[#233D30] dark:bg-[#10B981]/20 dark:text-[#6EE7B7]">
-                                  <UserCheck className="w-3 h-3 stroke-[2.5]" />
-                                  {language === "ar" ? "مرتبط" : "Linked"}
+                              {m.loginAccount?.lastLogin ? (
+                                <span
+                                  className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-[#EEF5F1] text-[#233D30] dark:bg-[#10B981]/20 dark:text-[#6EE7B7]"
+                                  title={new Date(m.loginAccount.lastLogin).toLocaleString(language === "ar" ? "ar-EG" : "en-US")}
+                                >
+                                  <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+                                  <span>{language === "ar" ? "مسجل دخول" : "Logged In"}</span>
+                                  <span className="text-[9px] text-[#77786F] dark:text-[#94A3B8] font-mono">
+                                    ({formatRelativeTime(m.loginAccount.lastLogin)})
+                                  </span>
+                                </span>
+                              ) : hasAccount ? (
+                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-[#FAF5EA] text-[#B58A3A] dark:bg-[#F59E0B]/20 dark:text-[#FBBF24]">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]"></span>
+                                  {language === "ar" ? "لم يدخل بعد" : "Never Logged In"}
                                 </span>
                               ) : (
                                 <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-[#EFEDE5] text-[#77786F] dark:bg-[#1E2235] dark:text-[#94A3B8]">

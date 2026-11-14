@@ -6,6 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { useLanguage } from "@/lib/i18n/context";
 import { MemberAvatar } from "@/components/MemberAvatar";
 import { LaurelRankBadge } from "@/components/LaurelRankBadge";
+import { CopticCross } from "@/components/CopticCross";
 import {
   Trophy,
   Flame,
@@ -13,6 +14,8 @@ import {
   CalendarCheck,
   QrCode,
   Award,
+  LogIn,
+  UserPlus,
 } from "lucide-react";
 
 // Arabic dual and plural unit rules as requested:
@@ -205,8 +208,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Personalized User Status Bar (if logged in) */}
-        {currentUser && (
+        {/* Personalized User Status Bar / Guest Login Prompt */}
+        {currentUser ? (
           <div className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-gradient-to-r dark:from-[#16182C] dark:via-[#1A1D34] dark:to-[#16182C] border border-[#E4E0D5] dark:border-[#2B2F4C] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
             <div className="flex items-center gap-3">
               <MemberAvatar
@@ -238,6 +241,41 @@ export default function HomePage() {
               >
                 <QrCode className="w-3.5 h-3.5" />
                 <span>{language === "ar" ? "بطاقة حضوري (QR)" : "My Pass"}</span>
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-gradient-to-r dark:from-[#16182C] dark:via-[#1A1D34] dark:to-[#16182C] border border-[#E4E0D5] dark:border-[#2B2F4C] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#FAF5EA] dark:bg-[#1E2238] border border-[#E4E0D5] dark:border-[#2D334D] flex items-center justify-center shrink-0 text-[#B58A3A] dark:text-[#F59E0B] shadow-inner">
+                <CopticCross className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-xs sm:text-sm text-[#252922] dark:text-white">
+                  {language === "ar" ? "سجّل دخولك لمتابعة نقاطك وبطاقتك" : "Sign in to track your attendance & pass"}
+                </h3>
+                <p className="text-[11px] text-[#77786F] dark:text-[#94A3B8] mt-0.5">
+                  {language === "ar"
+                    ? "تابع سلسلة حضورك الأسبوعي في التسبحة وافتح بطاقة الحضور الشخصية (QR)"
+                    : "Check your weekly praises streak and access your personal QR pass"}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 self-stretch sm:self-auto">
+              <Link
+                href="/login"
+                className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-[#233D30] hover:bg-[#192D24] dark:bg-[#1F243B] dark:hover:bg-[#2A3152] border border-[#233D30] dark:border-[#353B5D] text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>{language === "ar" ? "تسجيل الدخول" : "Log In"}</span>
+              </Link>
+              <Link
+                href="/register"
+                className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-[#B58A3A] hover:bg-[#9E7730] dark:bg-[#F59E0B] dark:hover:bg-[#D97706] text-white dark:text-[#0B0C14] text-xs font-black transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <UserPlus className="w-3.5 h-3.5" />
+                <span>{language === "ar" ? "حساب جديد" : "Sign Up"}</span>
               </Link>
             </div>
           </div>
